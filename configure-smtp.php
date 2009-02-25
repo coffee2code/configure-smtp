@@ -1,19 +1,30 @@
 <?php
 /*
 Plugin Name: Configure SMTP
-Version: 2.1
+Version: 2.5
 Plugin URI: http://coffee2code.com/wp-plugins/configure-smtp
 Author: Scott Reilly
 Author URI: http://coffee2code.com
-Description: Configure and activate SMTP mailing in WordPress, including support for sending mail via GMail.
+Description: Configure SMTP mailing in WordPress, including support for sending e-mail via GMail.
 
 This plugin is the renamed, rewritten, and updated version of the wpPHPMailer plugin.
 
-Use this plugin to send email via SMTP instead of sendmail.  It allows you to configure the SMTP host and port.
-You can enable SMTPAuth support, in which case you must provide an SMTP username and password.
+Use this plugin to customize the SMTP mailing system used by default by WordPress to handle *outgoing* e-mails.
+It offers you the ability to specify:
 
-Regardless of whether SMTP is enabled, the plugin provides you the ability to define the name and email of the
-'From:' field for all outgoing e-mails.
+	* SMTP host name
+	* SMTP port number
+	* If SMTPAuth (authentication) should be used.
+	* SMTP username
+	* SMTP password
+	* If the SMTP connection needs to occur over ssl or tls
+
+In addition, you can instead indicate that you wish to use GMail to handle outgoing e-mail, in which case the above
+settings are automatically configured to values appropriate for GMail, though you'll need to specify your GMail
+e-mail (included the "@gmail.com") and password.
+
+Regardless of whether SMTP is enabled or configured, the plugin provides you the ability to define the name and 
+email of the 'From:' field for all outgoing e-mails.
 
 A simple test button is also available that allows you to send a test e-mail to yourself to check if sending
 e-mail has been properly configured for your blog.
@@ -28,9 +39,9 @@ Installation:
 1. Download the file http://coffee2code.com/wp-plugins/configure-smtp.zip and unzip it into your 
 /wp-content/plugins/ directory.
 2. Activate the plugin through the 'Plugins' admin menu in WordPress.
-3. Click the plugin's 'Settings' link in the Action column (or go to the Settings -> SMTP link) to go to the plugin's admin options page.  
-Optionally customize the options (namely to activate SMTP mailing in the first place, and to configure it if the defaults aren't valid
-for your situation).
+3. Click the plugin's 'Settings' link next to its 'Deactivate' link (still on the Plugins page), or click on the 
+Settings -> SMTP link, to go to the plugin's admin options page.  Optionally customize the options (to configure it 
+if the defaults aren't valid for your situation).
 4. (optional) Use the built-in test to see if your blog can properly send out e-mails.
 
 */
@@ -54,49 +65,61 @@ IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 if ( !class_exists('ConfigureSMTP') ) :
 
 class ConfigureSMTP {
+	var $plugin_name = '';
 	var $admin_options_name = 'c2c_configure_smtp';
 	var $nonce_field = 'update-configure_smtp';
 	var $show_admin = true;	// Change this to false if you don't want the plugin's admin page shown.
-	var $config = array();
+	var $config = array(
+		// input can be 'checkbox', 'short_text', 'text', 'textarea', 'inline_textarea', 'select', 'hidden', 'password', or 'none'
+		//	an input type of 'select' must then have an 'options' value (an array) specified
+		// datatype can be 'array' or 'hash'
+		// can also specify input_attributes
+		'use_gmail' => array('input' => 'checkbox', 'default' => false,
+				'label' => 'Send e-mail via GMail?',
+				'help' => 'Clicking this will override many of the settings defined below.  You will need to input your GMail username and password below.',
+				'input_attributes' => 'onclick="return configure_gmail();"'),
+		'host' => array('input' => 'text', 'default' => 'localhost',
+				'label' => 'SMTP host',
+				'help' => 'If "localhost" doesn\'t work for you, check with your host for the SMTP hostname.'),
+		'port' => array('input' => 'short_text', 'default' => 25,
+				'label' => 'SMTP port',
+				'help' => "This is generally 25."),
+		'smtp_secure' => array('input' => 'select', 'default' => 'None',
+				'label' => 'Secure connection prefix',
+				'options' => array('', 'ssl', 'tls'),
+				'help' => 'Sets connection prefix for secure connections (prefix method must be supported by your PHP install and your SMTP host)'),
+		'smtp_auth'	=> array('input' => 'checkbox', 'default' => false,
+				'label' => 'Use SMTPAuth?',
+				'help' => 'If checked, you must provide the SMTP username and password below'),
+		'smtp_user'	=> array('input' => 'text', 'default' => '',
+				'label' => 'SMTP username',
+				'help' => ''),
+		'smtp_pass'	=> array('input' => 'password', 'default' => '',
+				'label' => 'SMTP password',
+				'help' => ''),
+		'wordwrap' => array('input' => 'short_text', 'default' => '',
+				'label' => 'Wordwrap length',
+				'help' => 'Sets word wrapping on the body of the message to a given number of characters.'),
+		'from_email' => array('input' => 'text', 'default' => '',
+				'label' => 'Sender e-mail',
+				'help' => 'Sets the From email address for all outgoing messages.  Leave blank to use the
+							WordPress default.  This value will be used even if you don\'t enable SMTP.'),
+		'from_name'	=> array('input' => 'text', 'default' => '',
+				'label' => 'Sender name',
+				'help' => 'Sets the From name for all outgoing messages. Leave blank to use the WordPress default.
+							This value will be used even if you don\'t enable SMTP.')
+	);
+	var $gmail_config = array(
+		'host' => 'smtp.gmail.com',
+		'port' => '465',
+		'smtp_auth' => true,
+		'smtp_secure' => 'ssl'
+	);
 	var $options = array(); // Don't use this directly
 
 	function ConfigureSMTP() {
-		$this->config = array(
-			// input can be 'checkbox', 'short_text', 'text', 'textarea', 'inline_textarea', 'select', 'hidden', or 'none'
-			//	an input type of 'select' must then have an 'options' value (an array) specified
-			// datatype can be 'array' or 'hash'
-			// can also specify input_attributes
-			'use_smtp' => array('input' => 'checkbox', 'default' => false,
-					'label' => 'Send e-mail via SMTP?',
-					'help' => ''),
-			'host' => array('input' => 'text', 'default' => 'localhost',
-					'label' => 'SMTP host',
-					'help' => 'If "localhost" doesn\'t work for you, check with your host for the SMTP hostname.'),
-			'port' => array('input' => 'short_text', 'default' => 25,
-					'label' => 'SMTP port',
-					'help' => 'This is generally 25.'),
-			'smtp_auth'	=> array('input' => 'checkbox', 'default' => false,
-					'label' => 'Use SMTPAuth?',
-					'help' => 'If checked, you must provide the SMTP username and password below'),
-			'smtp_user'	=> array('input' => 'text', 'default' => '',
-					'label' => 'SMTP username',
-					'help' => ''),
-			'smtp_pass'	=> array('input' => 'password', 'default' => '',
-					'label' => 'SMTP password',
-					'help' => ''),
-			'wordwrap' => array('input' => 'short_text', 'default' => '',
-					'label' => 'Wordwrap length',
-					'help' => 'Sets word wrapping on the body of the message to a given number of characters.'),
-			'from_email' => array('input' => 'text', 'default' => '',
-					'label' => 'Sender e-mail',
-					'help' => 'Sets the From email address for all outgoing messages.  Leave blank to use the
-								WordPress default.  This value will be used even if you don\'t enable SMTP.'),
-			'from_name'	=> array('input' => 'text', 'default' => '',
-					'label' => 'Sender name',
-					'help' => 'Sets the From name for all outgoing messages. Leave blank to use the WordPress default.
-								This value will be used even if you don\'t enable SMTP.')
-		);
-
+		$this->plugin_name = __('Configure SMTP');
+		add_action('admin_head', array(&$this, 'add_js'));
 		add_action('admin_menu', array(&$this, 'admin_menu'));
 		add_action('phpmailer_init', array(&$this, 'phpmailer_init'));
 		add_action('wp_mail_from', array(&$this, 'wp_mail_from'));
@@ -108,6 +131,26 @@ class ConfigureSMTP {
 		update_option($this->admin_options_name, $this->options);
 	}
 
+	function add_js() {
+		echo <<<JS
+		<script type="text/javascript">
+			function configure_gmail() {
+				if (jQuery('#use_gmail').attr('checked') == true) {
+					jQuery('#host').val('{$this->gmail_config['host']}');
+					jQuery('#port').val('{$this->gmail_config['port']}');
+					jQuery('#smtp_auth').attr('checked', {$this->gmail_config['smtp_auth']});
+					jQuery('#smtp_secure').val('{$this->gmail_config['smtp_secure']}');
+					if (!jQuery('#smtp_user').val().match(/.+@gmail.com$/) ) {
+						jQuery('#smtp_user').val('USERNAME@gmail.com').focus().get(0).setSelectionRange(0,8);
+					}
+					alert('Be sure to specify your GMail email address (with the @gmail.com) as the SMTP username, and your GMail password as the SMTP password.');
+					return true;
+				}
+			}
+		</script>
+JS;
+	}
+
 	function admin_menu() {
 		static $plugin_basename;
 		if ( $this->show_admin ) {
@@ -116,7 +159,7 @@ class ConfigureSMTP {
 				$plugin_basename = plugin_basename(__FILE__); 
 				if ( version_compare( $wp_version, '2.6.999', '>' ) )
 					add_filter( 'plugin_action_links_' . $plugin_basename, array(&$this, 'plugin_action_links') );
-				add_options_page('SMTP', 'SMTP', 9, $plugin_basename, array(&$this, 'options_page'));
+				add_options_page($this->plugin_name, 'SMTP', 9, $plugin_basename, array(&$this, 'options_page'));
 			}
 		}
 	}
@@ -132,8 +175,6 @@ class ConfigureSMTP {
 
 	function phpmailer_init($phpmailer) {
 		$options = $this->get_options();
-		if (!$options['use_smtp'])
-			return;
 		$phpmailer->IsSMTP();
 		$phpmailer->Host = $options['host'];
 		$phpmailer->Port = $options['port'] ? $options['port'] : 25;
@@ -142,8 +183,10 @@ class ConfigureSMTP {
 			$phpmailer->Username = $options['smtp_user'];
 			$phpmailer->Password = $options['smtp_pass'];
 		}
+		if ($options['smtp_secure'] != '')
+			$phpmailer->SMTPSecure = $options['smtp_secure'];
 		if ($options['wordwrap'] > 0 )
-			$phpmailer->WordWrap = $options['WordWrap'];
+			$phpmailer->WordWrap = $options['wordwrap'];
 		return $phpmailer;
 	}
 
@@ -207,10 +250,14 @@ class ConfigureSMTP {
 					}
 				}
 			}
+			// If GMail is to be used, those settings take precendence
+			if ($options['use_gmail'])
+				$options = wp_parse_args($this->gmail_config, $options);
+
 			// Remember to put all the other options into the array or they'll get lost!
 			update_option($this->admin_options_name, $options);
 
-			echo "<div class='updated'><p>Plugin settings saved.</p></div>";
+			echo "<div id='message' class='updated fade'><p><strong>" . __('Settings saved') . '</strong></p></div>';
 		}
 		elseif ( isset($_POST['submit_test_email']) ) {
 			check_admin_referer($this->nonce_field);
@@ -218,13 +265,13 @@ class ConfigureSMTP {
 			$email = $user->user_email;
 			$timestamp = current_time('mysql');
 			$message = <<<END
-Hi, this is the Configure SMTP plugin e-mailing you a test message from your WordPress blog.
+Hi, this is the {$this->plugin_name} plugin e-mailing you a test message from your WordPress blog.
 
-This message was sent: $timestamp
+This message was sent with this time-stamp: $timestamp
 
 Congratulations!  Your blog is properly configured to send e-mail.
 END;
-			wp_mail($email, "Test message2 from your WordPress blog", $message);
+			wp_mail($email, "Test message from your WordPress blog", $message);
 			//echo "<div class='updated'>I would have sent $email this message:<br />$message</div>";
 			echo "<div class='updated'><p>Test e-mail sent.</p><p>The body of the e-mail includes this time-stamp: $timestamp.</p></div>";
 		}
@@ -234,8 +281,8 @@ END;
 
 		echo <<<END
 		<div class='wrap'>
-			<div class="icon32" style="width:44px;"><img src='$logo' alt='coffee2code' /><br /></div>
-			<h2>Configure SMTP Plugin Options</h2>
+			<div class="icon32" style="width:44px;"><img src='$logo' alt='A plugin by coffee2code' /><br /></div>
+			<h2>{$this->plugin_name} Plugin Options</h2>
 			<p>After you've configured your SMTP options, use the <a href="#test">test</a> to send a test message to yourself.</p>
 			
 			<form name="configure_smtp" action="$action_url" method="post">	
