@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Configure SMTP
-Version: 2.0
+Version: 2.1
 Plugin URI: http://coffee2code.com/wp-plugins/configure-smtp
 Author: Scott Reilly
 Author URI: http://coffee2code.com
-Description: Configure and activate SMTP mailing in WordPress.
+Description: Configure and activate SMTP mailing in WordPress, including support for sending mail via GMail.
 
 This plugin is the renamed, rewritten, and updated version of the wpPHPMailer plugin.
 
@@ -18,7 +18,7 @@ Regardless of whether SMTP is enabled, the plugin provides you the ability to de
 A simple test button is also available that allows you to send a test e-mail to yourself to check if sending
 e-mail has been properly configured for your blog.
 
-Compatible with WordPress 2.2+, 2.3+, and 2.5.
+Compatible with WordPress 2.2+, 2.3+, 2.5+, 2.6+, 2.7+.
 
 =>> Read the accompanying readme.txt file for more information.  Also, visit the plugin's homepage
 =>> for more information and the latest updates
@@ -28,14 +28,15 @@ Installation:
 1. Download the file http://coffee2code.com/wp-plugins/configure-smtp.zip and unzip it into your 
 /wp-content/plugins/ directory.
 2. Activate the plugin through the 'Plugins' admin menu in WordPress.
-3. Go to the Options -> SMTP (or in WP 2.5: Settings -> SMTP) admin options page.  Optionally customize the options
-(namely to activate SMTP mailing in the first place, and to configure it if the defaults aren't valid for your situation).
+3. Click the plugin's 'Settings' link in the Action column (or go to the Settings -> SMTP link) to go to the plugin's admin options page.  
+Optionally customize the options (namely to activate SMTP mailing in the first place, and to configure it if the defaults aren't valid
+for your situation).
 4. (optional) Use the built-in test to see if your blog can properly send out e-mails.
 
 */
 
 /*
-Copyright (c) 2004-2008 by Scott Reilly (aka coffee2code)
+Copyright (c) 2004-2009 by Scott Reilly (aka coffee2code)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
 files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, 
@@ -61,7 +62,7 @@ class ConfigureSMTP {
 
 	function ConfigureSMTP() {
 		$this->config = array(
-			// input can be 'checkbox', 'text', 'textarea', 'inline_textarea', 'select', 'hidden', or 'none'
+			// input can be 'checkbox', 'short_text', 'text', 'textarea', 'inline_textarea', 'select', 'hidden', or 'none'
 			//	an input type of 'select' must then have an 'options' value (an array) specified
 			// datatype can be 'array' or 'hash'
 			// can also specify input_attributes
@@ -71,7 +72,7 @@ class ConfigureSMTP {
 			'host' => array('input' => 'text', 'default' => 'localhost',
 					'label' => 'SMTP host',
 					'help' => 'If "localhost" doesn\'t work for you, check with your host for the SMTP hostname.'),
-			'port' => array('input' => 'text', 'default' => 25,
+			'port' => array('input' => 'short_text', 'default' => 25,
 					'label' => 'SMTP port',
 					'help' => 'This is generally 25.'),
 			'smtp_auth'	=> array('input' => 'checkbox', 'default' => false,
@@ -83,7 +84,7 @@ class ConfigureSMTP {
 			'smtp_pass'	=> array('input' => 'password', 'default' => '',
 					'label' => 'SMTP password',
 					'help' => ''),
-			'wordwrap' => array('input' => 'text', 'default' => '',
+			'wordwrap' => array('input' => 'short_text', 'default' => '',
 					'label' => 'Wordwrap length',
 					'help' => 'Sets word wrapping on the body of the message to a given number of characters.'),
 			'from_email' => array('input' => 'text', 'default' => '',
@@ -108,8 +109,25 @@ class ConfigureSMTP {
 	}
 
 	function admin_menu() {
-		if ( $this->show_admin )
-			add_options_page('SMTP', 'SMTP', 9, basename(__FILE__), array(&$this, 'options_page'));
+		static $plugin_basename;
+		if ( $this->show_admin ) {
+			global $wp_version;
+			if ( current_user_can('edit_posts') ) {
+				$plugin_basename = plugin_basename(__FILE__); 
+				if ( version_compare( $wp_version, '2.6.999', '>' ) )
+					add_filter( 'plugin_action_links_' . $plugin_basename, array(&$this, 'plugin_action_links') );
+				add_options_page('SMTP', 'SMTP', 9, $plugin_basename, array(&$this, 'options_page'));
+			}
+		}
+	}
+
+	function plugin_action_links($action_links) {
+		static $plugin_basename;
+		if ( !$plugin_basename ) $plugin_basename = plugin_basename(__FILE__); 
+		$settings_link = '<a href="options-general.php?page='.$plugin_basename.'">' . __('Settings') . '</a>';
+		array_unshift( $action_links, $settings_link );
+
+		return $action_links;
 	}
 
 	function phpmailer_init($phpmailer) {
@@ -160,6 +178,8 @@ class ConfigureSMTP {
 	}
 
 	function options_page() {
+		static $plugin_basename;
+		if ( !$plugin_basename ) $plugin_basename = plugin_basename(__FILE__); 
 		$options = $this->get_options();
 		// See if user has submitted form
 		if ( isset($_POST['submitted']) ) {
@@ -206,13 +226,15 @@ Congratulations!  Your blog is properly configured to send e-mail.
 END;
 			wp_mail($email, "Test message2 from your WordPress blog", $message);
 			//echo "<div class='updated'>I would have sent $email this message:<br />$message</div>";
-			echo "<div class='updated'><p>Test e-mail sent.<br />The body of the e-mail mentions this timestamp: $timestamp.</p></div>";
+			echo "<div class='updated'><p>Test e-mail sent.</p><p>The body of the e-mail includes this time-stamp: $timestamp.</p></div>";
 		}
 
-		$action_url = $_SERVER[PHP_SELF] . '?page=' . basename(__FILE__);
+		$action_url = $_SERVER[PHP_SELF] . '?page=' . $plugin_basename;
+		$logo = get_option('siteurl') . '/wp-content/plugins/' . basename($_GET['page'], '.php') . '/c2c_minilogo.png';
 
 		echo <<<END
 		<div class='wrap'>
+			<div class="icon32" style="width:44px;"><img src='$logo' alt='coffee2code' /><br /></div>
 			<h2>Configure SMTP Plugin Options</h2>
 			<p>After you've configured your SMTP options, use the <a href="#test">test</a> to send a test message to yourself.</p>
 			
@@ -246,10 +268,10 @@ END;
 					echo "<tr valign='top'>";
 					if ($input == 'textarea') {
 						echo "<td colspan='2'>";
-						if ($label) echo "<strong>$label :</strong><br />";
+						if ($label) echo "<strong>$label</strong><br />";
 						echo "<textarea name='$opt' id='$opt' {$this->config[$opt]['input_attributes']}>" . $value . '</textarea>';
 					} else {
-						echo "<th scope='row'>$label : </th><td>";
+						echo "<th scope='row'>$label</th><td>";
 						if ($input == "inline_textarea")
 							echo "<textarea name='$opt' id='$opt' {$this->config[$opt]['input_attributes']}>" . $value . '</textarea>';
 						elseif ($input == 'select') {
@@ -259,8 +281,10 @@ END;
 								echo "<option value='$sopt'$selected>$sopt</option>";
 							}
 							echo "</select>";
-						} else
-							echo "<input name='$opt' type='$input' id='$opt' value='$value' $checked {$this->config[$opt]['input_attributes']} />";
+						} else {
+							$tclass = ($input == 'short_text') ? 'small-text' : 'regular-text';
+							echo "<input name='$opt' type='$input' id='$opt' value='$value' class='$tclass' $checked {$this->config[$opt]['input_attributes']} />";
+						}
 					}
 					if ($this->config[$opt]['help']) {
 						echo "<br /><span style='color:#777; font-size:x-small;'>";
@@ -272,11 +296,10 @@ END;
 		echo <<<END
 			</table>
 			<input type="hidden" name="submitted" value="1" />
-			<div class="submit"><input type="submit" name="Submit" value="Save Changes" /></div>
+			<div class="submit"><input type="submit" name="Submit" class="button-primary" value="Save Changes" /></div>
 		</form>
 			</div>
 END;
-		$logo = get_option('siteurl') . '/wp-content/plugins/' . basename($_GET['page'], '.php') . '/c2c_minilogo.png';
 				echo <<<END
 				<style type="text/css">
 					#c2c {
