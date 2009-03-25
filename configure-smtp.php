@@ -40,7 +40,7 @@ Installation:
 /wp-content/plugins/ directory.
 2. Activate the plugin through the 'Plugins' admin menu in WordPress.
 3. Click the plugin's 'Settings' link next to its 'Deactivate' link (still on the Plugins page), or click on the 
-Settings -> SMTP link, to go to the plugin's admin options page.  Optionally customize the options (to configure it 
+Settings -> SMTP link, to go to the plugin's admin settings page.  Optionally customize the settings (to configure it 
 if the defaults aren't valid for your situation).
 4. (optional) Use the built-in test to see if your blog can properly send out e-mails.
 
@@ -148,6 +148,7 @@ class ConfigureSMTP {
 				}
 			}
 		</script>
+
 JS;
 	}
 
@@ -282,8 +283,8 @@ END;
 		echo <<<END
 		<div class='wrap'>
 			<div class="icon32" style="width:44px;"><img src='$logo' alt='A plugin by coffee2code' /><br /></div>
-			<h2>{$this->plugin_name} Plugin Options</h2>
-			<p>After you've configured your SMTP options, use the <a href="#test">test</a> to send a test message to yourself.</p>
+			<h2>{$this->plugin_name} Settings</h2>
+			<p>After you've configured your SMTP settings, use the <a href="#test">test</a> to send a test message to yourself.</p>
 			
 			<form name="configure_smtp" action="$action_url" method="post">	
 END;
@@ -330,6 +331,7 @@ END;
 							echo "</select>";
 						} else {
 							$tclass = ($input == 'short_text') ? 'small-text' : 'regular-text';
+							if ($input == 'short_text') $input = 'text';
 							echo "<input name='$opt' type='$input' id='$opt' value='$value' class='$tclass' $checked {$this->config[$opt]['input_attributes']} />";
 						}
 					}
