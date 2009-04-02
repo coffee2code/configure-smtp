@@ -32,7 +32,7 @@ A simple test button is also available that allows you to send a test e-mail to 
 
 == Installation ==
 
-1. Unzip `configure-smtp.zip` inside the `/wp-content/plugins/` directory, or upload `configure-smtp.php` to `/wp-content/plugins/`
+1. Unzip `configure-smtp.zip` inside the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' admin menu in WordPress
 1. Click the plugin's `Settings` link next to its `Deactivate` link (still on the Plugins page), or click on the `Settings` -> `SMTP` link, to go to the plugin's admin settings page.  Optionally customize the settings (to configure it if the defaults aren't valid for your situation).
 1. (optional) Use the built-in test to see if your blog can properly send out e-mails.
