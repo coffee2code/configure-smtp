@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Configure SMTP
-Version: 2.5
+Version: 2.6
 Plugin URI: http://coffee2code.com/wp-plugins/configure-smtp
 Author: Scott Reilly
 Author URI: http://coffee2code.com
-Description: Configure SMTP mailing in WordPress, including support for sending e-mail via GMail.
+Description: Configure SMTP mailing in WordPress, including support for sending e-mail via SSL/TLS (such as GMail).
 
 This plugin is the renamed, rewritten, and updated version of the wpPHPMailer plugin.
 
@@ -29,7 +29,7 @@ email of the 'From:' field for all outgoing e-mails.
 A simple test button is also available that allows you to send a test e-mail to yourself to check if sending
 e-mail has been properly configured for your blog.
 
-Compatible with WordPress 2.2+, 2.3+, 2.5+, 2.6+, 2.7+.
+Compatible with WordPress 2.6+, 2.7+, 2.8+.
 
 =>> Read the accompanying readme.txt file for more information.  Also, visit the plugin's homepage
 =>> for more information and the latest updates
@@ -118,8 +118,10 @@ class ConfigureSMTP {
 	var $options = array(); // Don't use this directly
 
 	function ConfigureSMTP() {
+		global $pagenow;
 		$this->plugin_name = __('Configure SMTP');
-		add_action('admin_head', array(&$this, 'add_js'));
+		if ( 'options-general.php' == $pagenow )
+			add_action('admin_footer', array(&$this, 'add_js'));
 		add_action('admin_menu', array(&$this, 'admin_menu'));
 		add_action('phpmailer_init', array(&$this, 'phpmailer_init'));
 		add_action('wp_mail_from', array(&$this, 'wp_mail_from'));
@@ -156,7 +158,7 @@ JS;
 		static $plugin_basename;
 		if ( $this->show_admin ) {
 			global $wp_version;
-			if ( current_user_can('edit_posts') ) {
+			if ( current_user_can('manage_options') ) {
 				$plugin_basename = plugin_basename(__FILE__); 
 				if ( version_compare( $wp_version, '2.6.999', '>' ) )
 					add_filter( 'plugin_action_links_' . $plugin_basename, array(&$this, 'plugin_action_links') );
@@ -180,40 +182,40 @@ JS;
 		$phpmailer->Host = $options['host'];
 		$phpmailer->Port = $options['port'] ? $options['port'] : 25;
 		$phpmailer->SMTPAuth = $options['smtp_auth'] ? $options['smtp_auth'] : false;
-		if ($phpmailer->SMTPAuth) {
+		if ( $phpmailer->SMTPAuth ) {
 			$phpmailer->Username = $options['smtp_user'];
 			$phpmailer->Password = $options['smtp_pass'];
 		}
-		if ($options['smtp_secure'] != '')
+		if ( $options['smtp_secure'] != '' )
 			$phpmailer->SMTPSecure = $options['smtp_secure'];
-		if ($options['wordwrap'] > 0 )
+		if ( $options['wordwrap'] > 0 )
 			$phpmailer->WordWrap = $options['wordwrap'];
 		return $phpmailer;
 	}
 
 	function wp_mail_from($from) {
 		$options = $this->get_options();
-		if ($options['from_email'])
+		if ( $options['from_email'] )
 			$from = $options['from_email'];
 		return $from;		
 	}
 
 	function wp_mail_from_name($from_name) {
 		$options = $this->get_options();
-		if ($options['from_name'])
+		if ( $options['from_name'] )
 			$from_name = $options['from_name'];
 		return $from_name;
 	}
 
 	function get_options() {
-		if ( !empty($this->options)) return $this->options;
+		if ( !empty($this->options) ) return $this->options;
 		// Derive options from the config
 		$options = array();
 		foreach (array_keys($this->config) as $opt) {
 			$options[$opt] = $this->config[$opt]['default'];
 		}
         $existing_options = get_option($this->admin_options_name);
-        if (!empty($existing_options)) {
+        if ( !empty($existing_options) ) {
             foreach ($existing_options as $key => $value)
                 $options[$key] = $value;
         }            
@@ -232,27 +234,27 @@ JS;
 			foreach (array_keys($options) AS $opt) {
 				$options[$opt] = htmlspecialchars(stripslashes($_POST[$opt]));
 				$input = $this->config[$opt]['input'];
-				if (($input == 'checkbox') && !$options[$opt])
+				if ( ($input == 'checkbox') && !$options[$opt] )
 					$options[$opt] = 0;
-				if ($this->config[$opt]['datatype'] == 'array') {
-					if ($input == 'text')
+				if ( $this->config[$opt]['datatype'] == 'array' ) {
+					if ( $input == 'text' )
 						$options[$opt] = explode(',', str_replace(array(', ', ' ', ','), ',', $options[$opt]));
 					else
 						$options[$opt] = array_map('trim', explode("\n", trim($options[$opt])));
 				}
-				elseif ($this->config[$opt]['datatype'] == 'hash') {
+				elseif ( $this->config[$opt]['datatype'] == 'hash' ) {
 					if ( !empty($options[$opt]) ) {
 						$new_values = array();
 						foreach (explode("\n", $options[$opt]) AS $line) {
 							list($shortcut, $text) = array_map('trim', explode("=>", $line, 2));
-							if (!empty($shortcut)) $new_values[str_replace('\\', '', $shortcut)] = str_replace('\\', '', $text);
+							if ( !empty($shortcut) ) $new_values[str_replace('\\', '', $shortcut)] = str_replace('\\', '', $text);
 						}
 						$options[$opt] = $new_values;
 					}
 				}
 			}
 			// If GMail is to be used, those settings take precendence
-			if ($options['use_gmail'])
+			if ( $options['use_gmail'] )
 				$options = wp_parse_args($this->gmail_config, $options);
 
 			// Remember to put all the other options into the array or they'll get lost!
@@ -278,7 +280,7 @@ END;
 		}
 
 		$action_url = $_SERVER[PHP_SELF] . '?page=' . $plugin_basename;
-		$logo = get_option('siteurl') . '/wp-content/plugins/' . basename($_GET['page'], '.php') . '/c2c_minilogo.png';
+		$logo = plugins_url() . '/' . basename($_GET['page'], '.php') . '/c2c_minilogo.png';
 
 		echo <<<END
 		<div class='wrap'>
@@ -405,13 +407,12 @@ END;
 } // end ConfigureSMTP
 
 endif; // end if !class_exists()
+
 if ( class_exists('ConfigureSMTP') ) :
-	// Get the ball rolling
 	$configure_smtp = new ConfigureSMTP();
 	// Actions and filters
-	if (isset($configure_smtp)) {
+	if ( isset($configure_smtp) )
 		register_activation_hook( __FILE__, array(&$configure_smtp, 'install') );
-	}
 endif;
 
 ?>

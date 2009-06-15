@@ -1,17 +1,17 @@
 === Configure SMTP ===
 Contributors: coffee2code
-Donate link: http://coffee2code.com
-Tags: email, smtp, gmail, sendmail, wp_mail, phpmailer, outgoing mail
-Requires at least: 2.2
-Tested up to: 2.7.1
-Stable tag: trunk
-Version: 2.5
+Donate link: http://coffee2code.com/donate
+Tags: email, smtp, gmail, sendmail, wp_mail, phpmailer, outgoing mail, tls, ssl, security, privacy, coffee2code
+Requires at least: 2.6
+Tested up to: 2.8
+Stable tag: 2.6
+Version: 2.6
 
-Configure SMTP mailing in WordPress, including support for sending e-mail via GMail.
+Configure SMTP mailing in WordPress, including support for sending e-mail via SSL/TLS (such as GMail).
 
 == Description ==
 
-Configure SMTP mailing in WordPress, including support for sending e-mail via GMail.
+Configure SMTP mailing in WordPress, including support for sending e-mail via SSL/TLS (such as GMail).
 
 This plugin is the renamed, rewritten, and updated version of the wpPHPMailer plugin.
 
