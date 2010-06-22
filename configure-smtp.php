@@ -1,10 +1,11 @@
 <?php
 /*
 Plugin Name: Configure SMTP
-Version: 2.7
+Version: 2.7.1
 Plugin URI: http://coffee2code.com/wp-plugins/configure-smtp
 Author: Scott Reilly
 Author URI: http://coffee2code.com
+Text Domain: configure-smtp
 Description: Configure SMTP mailing in WordPress, including support for sending e-mail via SSL/TLS (such as GMail).
 
 This plugin is the renamed, rewritten, and updated version of the wpPHPMailer plugin.
@@ -125,6 +126,7 @@ class ConfigureSMTP {
 				'help' => __('Sets the From name for all outgoing messages. Leave blank to use the WordPress default. This value will be used even if you don\'t enable SMTP.', $this->textdomain))
 		);
 
+		add_action('init', array(&$this, 'load_textdomain'));
 		add_action('activate_' . str_replace(trailingslashit(WP_PLUGIN_DIR), '', __FILE__), array(&$this, 'install'));
 		if ( 'options-general.php' == $pagenow )
 			add_action('admin_footer', array(&$this, 'add_js'));
@@ -137,6 +139,15 @@ class ConfigureSMTP {
 	function install() {
 		$this->options = $this->get_options();
 		update_option($this->admin_options_name, $this->options);
+	}
+
+	/**
+	 * Loads the localization textdomain for the plugin.
+	 *
+	 * @return void
+	 */
+	function load_textdomain() {
+		load_plugin_textdomain( $this->textdomain, false, basename(dirname(__FILE__)) );
 	}
 
 	function add_js() {
@@ -209,16 +220,11 @@ JS;
 		if ( !empty($this->options) ) return $this->options;
 		// Derive options from the config
 		$options = array();
-		foreach (array_keys($this->config) as $opt) {
+		foreach ( array_keys($this->config) as $opt ) {
 			$options[$opt] = $this->config[$opt]['default'];
 		}
-		$existing_options = get_option($this->admin_options_name);
-		if ( !empty($existing_options) ) {
-			foreach ($existing_options as $key => $value)
-				$options[$key] = $value;
-		}
-		$this->options = $options;
-		return $options;
+		$this->options = wp_parse_args(get_option($this->admin_options_name), $options);
+		return $this->options;
 	}
 
 	function options_page() {
