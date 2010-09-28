@@ -3,11 +3,12 @@ Contributors: coffee2code
 Donate link: http://coffee2code.com/donate
 Tags: email, smtp, gmail, sendmail, wp_mail, phpmailer, outgoing mail, tls, ssl, security, privacy, wp-phpmailer, coffee2code
 Requires at least: 2.8
-Tested up to: 2.9.1
-Stable tag: 2.7
-Version: 2.7
+Tested up to: 3.0.1
+Stable tag: 3.0
+Version: 3.0
 
 Configure SMTP mailing in WordPress, including support for sending e-mail via SSL/TLS (such as GMail).
+
 
 == Description ==
 
@@ -30,12 +31,14 @@ Regardless of whether SMTP is enabled, the plugin provides you the ability to de
 
 A simple test button is also available that allows you to send a test e-mail to yourself to check if sending e-mail has been properly configured for your blog.
 
+
 == Installation ==
 
 1. Unzip `configure-smtp.zip` inside the `/wp-content/plugins/` directory (or install via the built-in WordPress plugin installer)
 1. Activate the plugin through the 'Plugins' admin menu in WordPress
 1. Click the plugin's `Settings` link next to its `Deactivate` link (still on the Plugins page), or click on the `Settings` -> `SMTP` link, to go to the plugin's admin settings page.  Optionally customize the settings (to configure it if the defaults aren't valid for your situation).
 1. (optional) Use the built-in test to see if your blog can properly send out e-mails.
+
 
 == Frequently Asked Questions ==
 
@@ -51,11 +54,36 @@ Check out the settings for your local e-mail program.  More than likely that is 
 
 If your settings worked, you should receive the test e-mail at the e-mail address associated with your WordPress blog user account.  That e-mail contains a time-stamp which was reported to you by the plugin when the e-mail was sent.  If you are trying out various setting values, be sure to record what your settings were and what the time-stamp was when sending with those settings.
 
+
 == Screenshots ==
 
 1. A screenshot of the plugin's admin settings page.
 
+
 == Changelog ==
+
+= 3.0 =
+* Re-implementation by extending C2C_Plugin_016, which among other things adds support for:
+    * Reset of options to default values
+    * Better sanitization of input values
+    * Offload of core/basic functionality to generic plugin framework
+    * Additional hooks for various stages/places of plugin operation
+    * Easier localization support
+* Add error checking and reporting when attempting to send test e-mail
+* Don't configure the mailer to use SMTP if no host is provided
+* Fix localization support
+* Store plugin instance in global variable, $c2c_configure_smtp, to allow for external manipulation
+* Rename class from 'ConfigureSMTP' to 'c2c_ConfigureSMTP'
+* Remove docs from top of plugin file (all that and more are in readme.txt)
+* Note compatibility with WP 3.0+
+* Minor tweaks to code formatting (spacing)
+* Add Upgrade Notice section to readme.txt
+* Add PHPDoc documentation
+* Add package info to top of file
+* Update copyright date
+* Remove trailing whitespace
+* Update screenshot
+* Update .pot file
 
 = 2.7 =
 * Fix to prevent HTML entities from appearing in the From name value in outgoing e-mails
@@ -100,3 +128,8 @@ If your settings worked, you should receive the test e-mail at the e-mail addres
 = pre-2.0 =
 * Earlier versions of this plugin existed as my wpPHPMailer plugin, which due to the inclusion of PHPMailer within WordPress's core and necessary changes to the plugin warranted a rebranding/renaming.
 
+
+== Upgrade Notice ==
+
+= 3.0 =
+Recommended update! This release includes a major re-implementation, bug fixes, localization support, and more.
