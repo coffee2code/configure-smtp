@@ -4,8 +4,8 @@ Donate link: http://coffee2code.com/donate
 Tags: email, smtp, gmail, sendmail, wp_mail, phpmailer, outgoing mail, tls, ssl, security, privacy, wp-phpmailer, coffee2code
 Requires at least: 2.8
 Tested up to: 3.0.1
-Stable tag: 3.0
-Version: 3.0
+Stable tag: 3.0.1
+Version: 3.0.1
 
 Configure SMTP mailing in WordPress, including support for sending e-mail via SSL/TLS (such as GMail).
 
@@ -61,6 +61,9 @@ If your settings worked, you should receive the test e-mail at the e-mail addres
 
 
 == Changelog ==
+
+= 3.0.1 =
+* Update plugin framework to 017 to use password input field instead of text field for SMTP password
 
 = 3.0 =
 * Re-implementation by extending C2C_Plugin_016, which among other things adds support for:
@@ -130,6 +133,9 @@ If your settings worked, you should receive the test e-mail at the e-mail addres
 
 
 == Upgrade Notice ==
+
+= 3.0.1 =
+Minor update.  Use password input field for SMTP password instead of regular text input field.
 
 = 3.0 =
 Recommended update! This release includes a major re-implementation, bug fixes, localization support, and more.

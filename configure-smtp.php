@@ -2,11 +2,11 @@
 /**
  * @package Configure_SMTP
  * @author Scott Reilly
- * @version 3.0
+ * @version 3.0.1
  */
 /*
 Plugin Name: Configure SMTP
-Version: 3.0
+Version: 3.0.1
 Plugin URI: http://coffee2code.com/wp-plugins/configure-smtp/
 Author: Scott Reilly
 Author URI: http://coffee2code.com
@@ -41,7 +41,7 @@ if ( !class_exists( 'c2c_ConfigureSMTP' ) ) :
 
 require_once( 'c2c-plugin.php' );
 
-class c2c_ConfigureSMTP extends C2C_Plugin_016 {
+class c2c_ConfigureSMTP extends C2C_Plugin_017 {
 
 	var $gmail_config = array(
 		'host' => 'smtp.gmail.com',
@@ -56,7 +56,7 @@ class c2c_ConfigureSMTP extends C2C_Plugin_016 {
 	 * @return void
 	 */
 	function c2c_ConfigureSMTP() {
-		$this->C2C_Plugin_016( '3.0', 'configure-smtp', 'c2c', __FILE__, array() );
+		$this->C2C_Plugin_017( '3.0.1', 'configure-smtp', 'c2c', __FILE__, array() );
 	}
 
 	/**
