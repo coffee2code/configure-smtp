@@ -2,27 +2,30 @@
 /**
  * @package Configure_SMTP
  * @author Scott Reilly
- * @version 3.0.1
+ * @version 3.1
  */
 /*
 Plugin Name: Configure SMTP
-Version: 3.0.1
+Version: 3.1
 Plugin URI: http://coffee2code.com/wp-plugins/configure-smtp/
 Author: Scott Reilly
 Author URI: http://coffee2code.com
 Text Domain: configure-smtp
 Description: Configure SMTP mailing in WordPress, including support for sending e-mail via SSL/TLS (such as GMail).
 
-Compatible with WordPress 2.8+, 2.9+, 3.0+.
+Compatible with WordPress 3.0+, 3.1+, 3.2+.
 
 =>> Read the accompanying readme.txt file for instructions and documentation.
 =>> Also, visit the plugin's homepage for additional information and updates.
 =>> Or visit: http://wordpress.org/extend/plugins/configure-smtp/
 
+TODO:
+	* Update screenshots for WP 3.2
+	* Add ability to configure plugin via defines in wp-config.php
 */
 
 /*
-Copyright (c) 2004-2010 by Scott Reilly (aka coffee2code)
+Copyright (c) 2004-2011 by Scott Reilly (aka coffee2code)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
 files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
@@ -37,26 +40,61 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRA
 IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-if ( !class_exists( 'c2c_ConfigureSMTP' ) ) :
+if ( ! class_exists( 'c2c_ConfigureSMTP' ) ) :
 
 require_once( 'c2c-plugin.php' );
 
-class c2c_ConfigureSMTP extends C2C_Plugin_017 {
+class c2c_ConfigureSMTP extends C2C_Plugin_023 {
 
-	var $gmail_config = array(
+	public static $instance;
+
+	private $gmail_config = array(
 		'host' => 'smtp.gmail.com',
 		'port' => '465',
 		'smtp_auth' => true,
 		'smtp_secure' => 'ssl'
 	);
+	private $error_msg = '';
 
 	/**
 	 * Constructor
 	 *
 	 * @return void
 	 */
-	function c2c_ConfigureSMTP() {
-		$this->C2C_Plugin_017( '3.0.1', 'configure-smtp', 'c2c', __FILE__, array() );
+	public function __construct() {
+		$this->c2c_ConfigureSMTP();
+	}
+
+	public function c2c_ConfigureSMTP() {
+		// Be a singleton
+		if ( ! is_null( self::$instance ) )
+			return;
+
+		$this->C2C_Plugin_023( '3.1', 'configure-smtp', 'c2c', __FILE__, array() );
+		register_activation_hook( __FILE__, array( __CLASS__, 'activation' ) );
+		self::$instance = $this;
+	}
+
+	/**
+	 * Handles activation tasks, such as registering the uninstall hook.
+	 *
+	 * @since 3.1
+	 *
+	 * @return void
+	 */
+	public function activation() {
+		register_uninstall_hook( __FILE__, array( __CLASS__, 'uninstall' ) );
+	}
+
+	/**
+	 * Handles uninstallation tasks, such as deleting plugin options.
+	 *
+	 * @since 3.1
+	 *
+	 * @return void
+	 */
+	public function uninstall() {
+		delete_option( 'c2c_configure_smtp' );
 	}
 
 	/**
@@ -64,8 +102,8 @@ class c2c_ConfigureSMTP extends C2C_Plugin_017 {
 	 *
 	 * @return void
 	 */
-	function load_config() {
-		$this->name = __( 'Configure SMTP', $this->textdomain );
+	public function load_config() {
+		$this->name      = __( 'Configure SMTP', $this->textdomain );
 		$this->menu_name = __( 'SMTP', $this->textdomain );
 
 		$this->config = array(
@@ -95,6 +133,9 @@ class c2c_ConfigureSMTP extends C2C_Plugin_017 {
 			'wordwrap' => array( 'input' => 'short_text', 'default' => '',
 				'label' => __( 'Wordwrap length', $this->textdomain ),
 				'help' => __( 'Sets word wrapping on the body of the message to a given number of characters.', $this->textdomain ) ),
+			'debug' => array( 'input' => 'checkbox', 'default' => false,
+				'label' => __( 'Enable debugging?', $this->textdomain ),
+				'help' => __( 'Only check this if you are experiencing problems and would like more error reporting to occur. <em>Uncheck this once you have finished debugging.</em>', $this->textdomain ) ),
 			'hr' => array(),
 			'from_email' => array( 'input' => 'text', 'default' => '',
 				'label' => __( 'Sender e-mail', $this->textdomain ),
@@ -110,15 +151,15 @@ class c2c_ConfigureSMTP extends C2C_Plugin_017 {
 	 *
 	 * @return void
 	 */
-	function register_filters() {
+	public function register_filters() {
 		global $pagenow;
 		if ( 'options-general.php' == $pagenow )
-			add_action( 'admin_print_footer_scripts', array( &$this, 'add_js' ) );
-		add_action( 'admin_init', array( &$this, 'maybe_send_test' ) );
-		add_action( 'phpmailer_init', array( &$this, 'phpmailer_init' ) );
-		add_action( 'wp_mail_from', array( &$this, 'wp_mail_from' ) );
-		add_action( 'wp_mail_from_name', array( &$this, 'wp_mail_from_name' ) );
-		add_action( $this->get_hook( 'after_settings_form' ), array( &$this, 'send_test_form' ) );
+			add_action( 'admin_print_footer_scripts',          array( &$this, 'add_js' ) );
+		add_action( 'admin_init',                              array( &$this, 'maybe_send_test' ) );
+		add_action( 'phpmailer_init',                          array( &$this, 'phpmailer_init' ) );
+		add_filter( 'wp_mail_from',                            array( &$this, 'wp_mail_from' ) );
+		add_filter( 'wp_mail_from_name',                       array( &$this, 'wp_mail_from_name' ) );
+		add_action( $this->get_hook( 'after_settings_form' ),  array( &$this, 'send_test_form' ) );
 		add_filter( $this->get_hook( 'before_update_option' ), array( &$this, 'maybe_gmail_override' ) );
 	}
 
@@ -127,9 +168,11 @@ class c2c_ConfigureSMTP extends C2C_Plugin_017 {
 	 *
 	 * @return void (Text will be echoed.)
 	 */
-	function options_page_description() {
+	public function options_page_description() {
 		$options = $this->get_options();
 		parent::options_page_description( __( 'Configure SMTP Settings', $this->textdomain ) );
+		if ( ! empty( $this->error_msg ) )
+			echo $this->error_msg;
 		$str = '<a href="#test">' . __( 'test', $this->textdomain ) . '</a>';
 		if ( empty( $options['host'] ) )
 			echo '<div class="error"><p>' . __( 'SMTP mailing is currently <strong>NOT ENABLED</strong> because no SMTP host has been specified.' ) . '</p></div>';
@@ -141,15 +184,20 @@ class c2c_ConfigureSMTP extends C2C_Plugin_017 {
 	 *
 	 * @return void (Text is echoed.)
 	 */
-	function add_js() {
-		$alert = __( 'Be sure to specify your GMail email address (with the @gmail.com) as the SMTP username, and your GMail password as the SMTP password.', $this->textdomain );
+	public function add_js() {
+		$alert = __( 'Be sure to specify your full GMail email address (including the "@gmail.com") as the SMTP username, and your GMail password as the SMTP password.', $this->textdomain );
+		$checked = $this->gmail_config['smtp_auth'] ? '1' : '';
 		echo <<<JS
 		<script type="text/javascript">
 			function configure_gmail() {
-				if (jQuery('#use_gmail').attr('checked') == true) {
+				// The .attr('checked') == true is only for pre-WP3.2
+				if (jQuery('#use_gmail').attr('checked') == 'checked' || jQuery('#use_gmail').attr('checked') == true) {
 					jQuery('#host').val('{$this->gmail_config['host']}');
 					jQuery('#port').val('{$this->gmail_config['port']}');
-					jQuery('#smtp_auth').attr('checked', {$this->gmail_config['smtp_auth']});
+					if (jQuery('#use_gmail').attr('checked') == 'checked')
+						jQuery('#smtp_auth').prop('checked', $checked);
+					else // pre WP-3.2 only
+						jQuery('#smtp_auth').attr('checked', {$this->gmail_config['smtp_auth']});
 					jQuery('#smtp_secure').val('{$this->gmail_config['smtp_secure']}');
 					if (!jQuery('#smtp_user').val().match(/.+@gmail.com$/) ) {
 						jQuery('#smtp_user').val('USERNAME@gmail.com').focus().get(0).setSelectionRange(0,8);
@@ -169,7 +217,7 @@ JS;
 	 * @param array $options The options array prior to saving
 	 * @return array The options array with GMail settings taking precedence, if relevant
 	 */
-	function maybe_gmail_override( $options ) {
+	public function maybe_gmail_override( $options ) {
 		// If GMail is to be used, those settings take precendence
 		if ( $options['use_gmail'] )
 			$options = wp_parse_args( $this->gmail_config, $options );
@@ -180,7 +228,7 @@ JS;
 	 * Sends test e-mail if form was submitted requesting to do so.
 	 *
 	 */
-	function maybe_send_test() {
+	public function maybe_send_test() {
 		if ( isset( $_POST[$this->get_form_submit_name( 'submit_test_email' )] ) ) {
 			check_admin_referer( $this->nonce_field );
 			$user = wp_get_current_user();
@@ -196,15 +244,14 @@ JS;
 			// Check success
 			global $phpmailer;
 			if ( $phpmailer->ErrorInfo != "" ) {
-				echo '<div class="error"><p>' . __( 'An error was encountered while trying to send the test e-mail.' ) . '</p>';
-				echo '<blockquote style="font-weight:bold;">';
-				echo '<p>' . $phpmailer->ErrorInfo . '</p>';
-				echo '<p>' . $phpmailer->smtp->error['error'] . '<br />' . $phpmailer->smtp->error['errstr'] . '</p>';
-				echo '</blockquote>';
-				echo '</div>';
+				$this->error_msg  = '<div class="error"><p>' . __( 'An error was encountered while trying to send the test e-mail.', $this->textdomain ) . '</p>';
+				$this->error_msg .= '<blockquote style="font-weight:bold;">';
+				$this->error_msg .= '<p>' . $phpmailer->ErrorInfo . '</p>';
+				$this->error_msg .= '</p></blockquote>';
+				$this->error_msg .= '</div>';
 			} else {
-				echo '<div class="updated"><p>' . __( 'Test e-mail sent.', $this->textdomain ) . '</p>';
-				echo '<p>' . sprintf( __( 'The body of the e-mail includes this time-stamp: %s.', $this->textdomain ), $timestamp ) . '</p></div>';
+				$this->error_msg  = '<div class="updated"><p>' . __( 'Test e-mail sent.', $this->textdomain ) . '</p>';
+				$this->error_msg .= '<p>' . sprintf( __( 'The body of the e-mail includes this time-stamp: %s.', $this->textdomain ), $timestamp ) . '</p></div>';
 			}
 		}
 	}
@@ -214,7 +261,7 @@ JS;
 	 *
 	 * @return void (Text will be echoed.)
 	 */
-	function send_test_form() {
+	public function send_test_form() {
 		$user = wp_get_current_user();
 		$email = $user->user_email;
 		$action_url = $this->form_action_url();
@@ -235,7 +282,7 @@ JS;
 	 * @param object $phpmailer PHPMailer object
 	 * @return void
 	 */
-	function phpmailer_init( $phpmailer ) {
+	public function phpmailer_init( $phpmailer ) {
 		$options = $this->get_options();
 		// Don't configure for SMTP if no host is provided.
 		if ( empty( $options['host'] ) )
@@ -252,6 +299,8 @@ JS;
 			$phpmailer->SMTPSecure = $options['smtp_secure'];
 		if ( $options['wordwrap'] > 0 )
 			$phpmailer->WordWrap = $options['wordwrap'];
+		if ( $options['debug'] )
+			$phpmailer->SMTPDebug = true;
 	}
 
 	/**
@@ -260,9 +309,9 @@ JS;
 	 * @param string $from The "from" e-mail address used by WordPress by default
 	 * @return string The potentially new "from" e-mail address, if overridden via the plugin's settings.
 	 */
-	function wp_mail_from( $from ) {
+	public function wp_mail_from( $from ) {
 		$options = $this->get_options();
-		if ( $options['from_email'] )
+		if ( ! empty( $options['from_email'] ) )
 			$from = $options['from_email'];
 		return $from;
 	}
@@ -273,15 +322,17 @@ JS;
 	 * @param string $from The "from" name used by WordPress by default
 	 * @return string The potentially new "from" name, if overridden via the plugin's settings.
 	 */
-	function wp_mail_from_name( $from_name ) {
+	public function wp_mail_from_name( $from_name ) {
 		$options = $this->get_options();
-		if ( $options['from_name'] )
+		if ( ! empty( $options['from_name'] ) )
 			$from_name = wp_specialchars_decode( $options['from_name'], ENT_QUOTES );
 		return $from_name;
 	}
 
 } // end c2c_ConfigureSMTP
 
+// NOTICE: The 'c2c_configure_smtp' global is deprecated and will be removed in the plugin's version 3.0.
+// Instead, use: c2c_ConfigureSMTP::$instance
 $GLOBALS['c2c_configure_smtp'] = new c2c_ConfigureSMTP();
 
 endif; // end if !class_exists()

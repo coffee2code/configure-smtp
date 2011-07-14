@@ -2,10 +2,10 @@
 Contributors: coffee2code
 Donate link: http://coffee2code.com/donate
 Tags: email, smtp, gmail, sendmail, wp_mail, phpmailer, outgoing mail, tls, ssl, security, privacy, wp-phpmailer, coffee2code
-Requires at least: 2.8
-Tested up to: 3.0.1
-Stable tag: 3.0.1
-Version: 3.0.1
+Requires at least: 3.0
+Tested up to: 3.2
+Stable tag: 3.1
+Version: 3.1
 
 Configure SMTP mailing in WordPress, including support for sending e-mail via SSL/TLS (such as GMail).
 
@@ -31,6 +31,8 @@ Regardless of whether SMTP is enabled, the plugin provides you the ability to de
 
 A simple test button is also available that allows you to send a test e-mail to yourself to check if sending e-mail has been properly configured for your blog.
 
+Links: [Plugin Homepage](http://coffee2code.com/wp-plugins/configure-smtp/) | [Author Homepage](http://coffee2code.com)
+
 
 == Installation ==
 
@@ -54,6 +56,17 @@ Check out the settings for your local e-mail program.  More than likely that is 
 
 If your settings worked, you should receive the test e-mail at the e-mail address associated with your WordPress blog user account.  That e-mail contains a time-stamp which was reported to you by the plugin when the e-mail was sent.  If you are trying out various setting values, be sure to record what your settings were and what the time-stamp was when sending with those settings.
 
+= Why am I getting this error when attempting to send a test message: `SMTP Error: Could not connect to SMTP host.`? =
+
+There are a number of reasons you could be getting this error:
+# Your server (or a router to which it is connected) may be blocking all outgoing SMTP traffic.
+# Your mail server may be configured to allow SMTP connections only from certain servers.
+# You have supplied incorrect server settings (hostname, port number, secure protocol type).
+
+= What am I getting this error: `SMTP Error: Could not authenticate.`? =
+
+The connection to the SMTP server was successful, but the credentials you provided (username and/or password) are not correct.
+
 
 == Screenshots ==
 
@@ -61,6 +74,28 @@ If your settings worked, you should receive the test e-mail at the e-mail addres
 
 
 == Changelog ==
+
+= 3.1 =
+* Add new debugging configuration option
+* Fix bug that resulted from WP 3.2's update to a new phpmailer
+* Fix bug with checking 'Use GMail?' did not auto-reset settings accordingly (jQuery bug regarding .attr() vs .prop() introduced in jQ 1.6 in WP 3.2)
+* Fix to call add_filter() instead of add_action() for 'wp_mail_from' (props Callum Macdonald)
+* Fix to call add_filter() instead of add_action() for 'wp_mail_from_name'
+* Store error messages for later display rather than immediately outputting (too early)
+* Save a static version of itself in class variable $instance
+* Deprecate use of global variable $c2c_configure_smtp to store instance
+* Add explicit empty() checks in a couple places
+* Delete plugin settings on uninstallation
+* Add __construct(), activation(), and uninstall()
+* Add more FAQ questions
+* Regenerate .pot
+* Update plugin framework to version 023
+* Note compatibility through WP 3.2+
+* Drop compatibility with versions of WP older than 3.0
+* Explicitly declare all functions as public and class variables as private
+* Minor code formatting changes (spacing)
+* Update copyright date (2011)
+* Add plugin homepage and author links in description in readme.txt
 
 = 3.0.1 =
 * Update plugin framework to 017 to use password input field instead of text field for SMTP password
@@ -133,6 +168,9 @@ If your settings worked, you should receive the test e-mail at the e-mail addres
 
 
 == Upgrade Notice ==
+
+= 3.1 =
+Recommended update. Highlights: fixed numerous bugs; added a debug mode; updated compatibility through WP 3.2; dropped compatibility with version of WP older than 3.0; updated plugin framework.
 
 = 3.0.1 =
 Minor update.  Use password input field for SMTP password instead of regular text input field.
