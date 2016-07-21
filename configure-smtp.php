@@ -1,28 +1,33 @@
 <?php
 /**
+ * Plugin Name: Configure SMTP
+ * Version:     3.1
+ * Plugin URI:  http://coffee2code.com/wp-plugins/configure-smtp/
+ * Author:      Scott Reilly
+ * Author URI:  http://coffee2code.com
+ * Text Domain: configure-smtp
+ * Description: Configure SMTP mailing in WordPress, including support for sending email via SSL/TLS (such as GMail).
+ *
+ * Compatible with WordPress 3.0+, 3.1+, 3.2+.
+ *
+ * =>> Read the accompanying readme.txt file for instructions and documentation.
+ * =>> Also, visit the plugin's homepage for additional information and updates.
+ * =>> Or visit: https://wordpress.org/plugins/configure-smtp/
+ *
  * @package Configure_SMTP
- * @author Scott Reilly
+ * @author  Scott Reilly
  * @version 3.1
  */
+
 /*
-Plugin Name: Configure SMTP
-Version: 3.1
-Plugin URI: http://coffee2code.com/wp-plugins/configure-smtp/
-Author: Scott Reilly
-Author URI: http://coffee2code.com
-Text Domain: configure-smtp
-Description: Configure SMTP mailing in WordPress, including support for sending e-mail via SSL/TLS (such as GMail).
-
-Compatible with WordPress 3.0+, 3.1+, 3.2+.
-
-=>> Read the accompanying readme.txt file for instructions and documentation.
-=>> Also, visit the plugin's homepage for additional information and updates.
-=>> Or visit: http://wordpress.org/extend/plugins/configure-smtp/
-
-TODO:
-	* Update screenshots for WP 3.2
-	* Add ability to configure plugin via defines in wp-config.php
-*/
+ * TODO:
+ * - Add ability to configure plugin via defines in wp-config.php. Include option to disable admin.
+ *   However, if admin is being shown but user/pw is set in file, disable those inputs on the form.
+ *   (Maybe show smtp username, but definitely don't show pw)
+ * - Don't show or include SMTP pw on form. Leave blank to indicate previously entered pw should be used.
+ *   (But UI should let user know whether it knows about a pw or not, and if so, that it doesn't need to
+ *   be re-entered unless it is being changed)
+ */
 
 /*
 Copyright (c) 2004-2011 by Scott Reilly (aka coffee2code)

@@ -75,6 +75,9 @@ The connection to the SMTP server was successful, but the credentials you provid
 
 == Changelog ==
 
+= () =
+* Change: Reformat plugin header.
+
 = 3.1 =
 * Add new debugging configuration option
 * Fix bug that resulted from WP 3.2's update to a new phpmailer
