@@ -81,6 +81,7 @@ The connection to the SMTP server was successful, but the credentials you provid
 * Change: Re-license as GPLv2 or later (from X11).
 * New: Add 'License' and 'License URI' header tags to readme.txt and plugin file.
 * New: Add LICENSE file.
+* New: Add empty index.php to prevent files from being listed if web server has enabled directory listings.
 * Change: Reformat plugin header.
 
 = 3.1 =
