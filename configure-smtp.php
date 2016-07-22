@@ -55,9 +55,14 @@ if ( ! class_exists( 'c2c_ConfigureSMTP' ) ) :
 
 require_once( 'c2c-plugin.php' );
 
-class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
+final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 
-	public static $instance;
+	/**
+	 * The one true instance.
+	 *
+	 * @var c2c_ConfigureSMTP
+	 */
+	private static $instance;
 
 	private $gmail_config = array(
 		'host' => 'smtp.gmail.com',
@@ -68,22 +73,26 @@ class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 	private $error_msg = '';
 
 	/**
-	 * Constructor
+	 * Get singleton instance.
 	 *
-	 * @return void
+	 * @since 3.2
 	 */
-	public function __construct() {
-		$this->c2c_ConfigureSMTP();
+	public static function get_instance() {
+		if ( ! isset( self::$instance ) ) {
+			self::$instance = new self();
+		}
+
+		return self::$instance;
 	}
 
-	public function c2c_ConfigureSMTP() {
-		// Be a singleton
-		if ( ! is_null( self::$instance ) )
-			return;
-
-		$this->C2C_Plugin_023( '3.1', 'configure-smtp', 'c2c', __FILE__, array() );
+	/**
+	 * Constructor
+	 */
+	protected function __construct() {
+		parent::__construct( '3.1', 'configure-smtp', 'c2c', __FILE__, array() );
 		register_activation_hook( __FILE__, array( __CLASS__, 'activation' ) );
-		self::$instance = $this;
+
+		return self::$instance = $this;
 	}
 
 	/**
@@ -342,9 +351,8 @@ JS;
 
 } // end c2c_ConfigureSMTP
 
-// NOTICE: The 'c2c_configure_smtp' global is deprecated and will be removed in the plugin's version 3.0.
-// Instead, use: c2c_ConfigureSMTP::$instance
-$GLOBALS['c2c_configure_smtp'] = new c2c_ConfigureSMTP();
+// Note: Support for the global is deprecated and will be removed.
+$GLOBALS['c2c_configure_smtp'] = c2c_ConfigureSMTP::get_instance();
 
 endif; // end if !class_exists()
 

@@ -79,6 +79,12 @@ The connection to the SMTP server was successful, but the credentials you provid
 
 = () =
 * Change: Update plugin framework to 045. (Too many changes to list.)
+* Change: Improve singleton implementation.
+    * Add `get_instance()` static method for returning/creating singleton instance.
+    * Make static variable 'instance' private.
+    * Make constructor protected.
+    * Make class final.
+    * Additional related changes in plugin framework (protected constructor, erroring `__clone()` and `__wakeup()`).
 * Change: Prevent execution of code if file is directly accessed.
 * Change: Re-license as GPLv2 or later (from X11).
 * New: Add 'License' and 'License URI' header tags to readme.txt and plugin file.
