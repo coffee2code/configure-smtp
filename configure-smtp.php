@@ -55,7 +55,7 @@ if ( ! class_exists( 'c2c_ConfigureSMTP' ) ) :
 
 require_once( 'c2c-plugin.php' );
 
-class c2c_ConfigureSMTP extends C2C_Plugin_023 {
+class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 
 	public static $instance;
 
