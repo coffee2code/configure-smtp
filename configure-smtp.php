@@ -53,7 +53,7 @@ defined( 'ABSPATH' ) or die();
 
 if ( ! class_exists( 'c2c_ConfigureSMTP' ) ) :
 
-require_once( 'c2c-plugin.php' );
+require_once( dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'c2c-plugin.php' );
 
 final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 
