@@ -92,6 +92,7 @@ The connection to the SMTP server was successful, but the credentials you provid
 * New: Add LICENSE file.
 * New: Add empty index.php to prevent files from being listed if web server has enabled directory listings.
 * Change: Reformat plugin header.
+* Change: Update copyright date (2016).
 
 = 3.1 =
 * Add new debugging configuration option
