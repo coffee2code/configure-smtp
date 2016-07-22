@@ -2,6 +2,8 @@
 Contributors: coffee2code
 Donate link: http://coffee2code.com/donate
 Tags: email, smtp, gmail, sendmail, wp_mail, phpmailer, outgoing mail, tls, ssl, security, privacy, wp-phpmailer, coffee2code
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Requires at least: 3.0
 Tested up to: 3.2
 Stable tag: 3.1
@@ -76,6 +78,9 @@ The connection to the SMTP server was successful, but the credentials you provid
 == Changelog ==
 
 = () =
+* Change: Re-license as GPLv2 or later (from X11).
+* New: Add 'License' and 'License URI' header tags to readme.txt and plugin file.
+* New: Add LICENSE file.
 * Change: Reformat plugin header.
 
 = 3.1 =
