@@ -86,6 +86,7 @@ The connection to the SMTP server was successful, but the credentials you provid
     * Additional related changes in plugin framework (protected constructor, erroring `__clone()` and `__wakeup()`).
 * Change: Use explicit path when requiring plugin framework.
 * Fix: Explicitly declare `activation()` and `uninstall()` static.
+* Fix: For `options_page_description()`, match method signature of parent class.
 * Change: Prevent execution of code if file is directly accessed.
 * Change: Re-license as GPLv2 or later (from X11).
 * New: Add 'License' and 'License URI' header tags to readme.txt and plugin file.

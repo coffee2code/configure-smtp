@@ -184,11 +184,11 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 	}
 
 	/**
-	 * Outputs the text above the setting form
+	 * Outputs the text above the setting form.
 	 *
-	 * @return void (Text will be echoed.)
+	 * @param string $localized_heading_text Optional. Localized page heading text.
 	 */
-	public function options_page_description() {
+	public function options_page_description( $localized_heading_text = '' ) {
 		$options = $this->get_options();
 		parent::options_page_description( __( 'Configure SMTP Settings', $this->textdomain ) );
 		if ( ! empty( $this->error_msg ) )
