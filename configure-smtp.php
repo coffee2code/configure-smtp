@@ -102,7 +102,7 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 	 *
 	 * @return void
 	 */
-	public function activation() {
+	public static function activation() {
 		register_uninstall_hook( __FILE__, array( __CLASS__, 'uninstall' ) );
 	}
 
@@ -113,7 +113,7 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 	 *
 	 * @return void
 	 */
-	public function uninstall() {
+	public static function uninstall() {
 		delete_option( 'c2c_configure_smtp' );
 	}
 
