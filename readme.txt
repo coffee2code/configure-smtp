@@ -4,10 +4,9 @@ Donate link: http://coffee2code.com/donate
 Tags: email, smtp, gmail, sendmail, wp_mail, phpmailer, outgoing mail, tls, ssl, security, privacy, wp-phpmailer, coffee2code
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Requires at least: 3.0
-Tested up to: 3.2
+Requires at least: 4.2
+Tested up to: 4.6
 Stable tag: 3.1
-Version: 3.1
 
 Configure SMTP mailing in WordPress, including support for sending e-mail via SSL/TLS (such as GMail).
 
@@ -92,6 +91,8 @@ The connection to the SMTP server was successful, but the credentials you provid
 * New: Add LICENSE file.
 * New: Add empty index.php to prevent files from being listed if web server has enabled directory listings.
 * Change: Reformat plugin header.
+* Change: Note compatibility through WP 4.5+.
+* Change: Dropped compatibility with version of WP older than 4.2.
 * Change: Update copyright date (2016).
 
 = 3.1 =

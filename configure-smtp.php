@@ -10,7 +10,7 @@
  * Text Domain: configure-smtp
  * Description: Configure SMTP mailing in WordPress, including support for sending email via SSL/TLS (such as GMail).
  *
- * Compatible with WordPress 3.0+, 3.1+, 3.2+.
+ * Compatible with WordPress 4.2+ through 4.6+.
  *
  * =>> Read the accompanying readme.txt file for instructions and documentation.
  * =>> Also, visit the plugin's homepage for additional information and updates.
