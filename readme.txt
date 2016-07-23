@@ -90,6 +90,7 @@ The connection to the SMTP server was successful, but the credentials you provid
 * New: Add 'License' and 'License URI' header tags to readme.txt and plugin file.
 * New: Add LICENSE file.
 * New: Add empty index.php to prevent files from being listed if web server has enabled directory listings.
+* Change: Remove file-ending PHP close tag.
 * Change: Reformat plugin header.
 * Change: Note compatibility through WP 4.5+.
 * Change: Dropped compatibility with version of WP older than 4.2.

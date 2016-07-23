@@ -355,5 +355,3 @@ JS;
 $GLOBALS['c2c_configure_smtp'] = c2c_ConfigureSMTP::get_instance();
 
 endif; // end if !class_exists()
-
-?>
