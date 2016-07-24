@@ -65,9 +65,9 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 	private static $instance;
 
 	private $gmail_config = array(
-		'host' => 'smtp.gmail.com',
-		'port' => '465',
-		'smtp_auth' => true,
+		'host'        => 'smtp.gmail.com',
+		'port'        => '465',
+		'smtp_auth'   => true,
 		'smtp_secure' => 'ssl'
 	);
 	private $error_msg = '';
@@ -229,11 +229,15 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 	public function options_page_description( $localized_heading_text = '' ) {
 		$options = $this->get_options();
 		parent::options_page_description( __( 'Configure SMTP Settings', $this->textdomain ) );
-		if ( ! empty( $this->error_msg ) )
+
+		if ( ! empty( $this->error_msg ) ) {
 			echo $this->error_msg;
+		}
+
 		$str = '<a href="#test">' . __( 'test', $this->textdomain ) . '</a>';
-		if ( empty( $options['host'] ) )
+		if ( empty( $options['host'] ) ) {
 			echo '<div class="error"><p>' . __( 'SMTP mailing is currently <strong>NOT ENABLED</strong> because no SMTP host has been specified.' ) . '</p></div>';
+		}
 		echo '<p>' . sprintf( __( 'After you have configured your SMTP settings, use the %s to send a test message to yourself.', $this->textdomain ), $str ) . '</p>';
 	}
 
@@ -277,8 +281,10 @@ JS;
 	 */
 	public function maybe_gmail_override( $options ) {
 		// If GMail is to be used, those settings take precendence
-		if ( $options['use_gmail'] )
+		if ( $options['use_gmail'] ) {
 			$options = wp_parse_args( $this->gmail_config, $options );
+		}
+
 		return $options;
 	}
 
@@ -287,10 +293,11 @@ JS;
 	 *
 	 */
 	public function maybe_send_test() {
-		if ( isset( $_POST[$this->get_form_submit_name( 'submit_test_email' )] ) ) {
+		if ( isset( $_POST[ $this->get_form_submit_name( 'submit_test_email' ) ] ) ) {
 			check_admin_referer( $this->nonce_field );
-			$user = wp_get_current_user();
-			$email = $user->user_email;
+
+			$user      = wp_get_current_user();
+			$email     = $user->user_email;
 			$timestamp = current_time( 'mysql' );
 			$message = sprintf( __( 'Hi, this is the %s plugin e-mailing you a test message from your WordPress blog.', $this->textdomain ), $this->name );
 			$message .= "\n\n";
@@ -301,6 +308,7 @@ JS;
 
 			// Check success
 			global $phpmailer;
+
 			if ( $phpmailer->ErrorInfo != "" ) {
 				$this->error_msg  = '<div class="error"><p>' . __( 'An error was encountered while trying to send the test e-mail.', $this->textdomain ) . '</p>';
 				$this->error_msg .= '<blockquote style="font-weight:bold;">';
@@ -320,9 +328,10 @@ JS;
 	 * @return void (Text will be echoed.)
 	 */
 	public function send_test_form() {
-		$user = wp_get_current_user();
-		$email = $user->user_email;
+		$user       = wp_get_current_user();
+		$email      = $user->user_email;
 		$action_url = $this->form_action_url();
+
 		echo '<div class="wrap"><h2><a name="test"></a>' . __( 'Send A Test', $this->textdomain ) . "</h2>\n";
 		echo '<p>' . __( 'Click the button below to send a test email to yourself to see if things are working.  Be sure to save any changes you made to the form above before sending the test e-mail.  Bear in mind it may take a few minutes for the e-mail to wind its way through the internet.', $this->textdomain ) . "</p>\n";
 		echo '<p>' . sprintf( __( 'This e-mail will be sent to your e-mail address, %s.', $this->textdomain ), $email ) . "</p>\n";
@@ -342,9 +351,12 @@ JS;
 	 */
 	public function phpmailer_init( $phpmailer ) {
 		$options = $this->get_options();
+
 		// Don't configure for SMTP if no host is provided.
-		if ( empty( $options['host'] ) )
+		if ( empty( $options['host'] ) ) {
 			return;
+		}
+
 		$phpmailer->IsSMTP();
 		$phpmailer->Host = $options['host'];
 		$phpmailer->Port = $options['port'] ? $options['port'] : 25;
@@ -353,12 +365,15 @@ JS;
 			$phpmailer->Username = $options['smtp_user'];
 			$phpmailer->Password = $options['smtp_pass'];
 		}
-		if ( $options['smtp_secure'] != '' )
+		if ( $options['smtp_secure'] != '' ) {
 			$phpmailer->SMTPSecure = $options['smtp_secure'];
-		if ( $options['wordwrap'] > 0 )
-			$phpmailer->WordWrap = $options['wordwrap'];
-		if ( $options['debug'] )
+		}
+		if ( $options['wordwrap'] > 0 ) {
+			$phpmailer->WordWrap = (int) $options['wordwrap'];
+		}
+		if ( $options['debug'] ) {
 			$phpmailer->SMTPDebug = true;
+		}
 	}
 
 	/**
@@ -369,8 +384,11 @@ JS;
 	 */
 	public function wp_mail_from( $from ) {
 		$options = $this->get_options();
-		if ( ! empty( $options['from_email'] ) )
+
+		if ( ! empty( $options['from_email'] ) ) {
 			$from = $options['from_email'];
+		}
+
 		return $from;
 	}
 
@@ -382,8 +400,11 @@ JS;
 	 */
 	public function wp_mail_from_name( $from_name ) {
 		$options = $this->get_options();
-		if ( ! empty( $options['from_name'] ) )
+
+		if ( ! empty( $options['from_name'] ) ) {
 			$from_name = wp_specialchars_decode( $options['from_name'], ENT_QUOTES );
+		}
+
 		return $from_name;
 	}
 
