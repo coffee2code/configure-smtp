@@ -173,14 +173,16 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 	 */
 	public function register_filters() {
 		global $pagenow;
-		if ( 'options-general.php' == $pagenow )
-			add_action( 'admin_print_footer_scripts',          array( &$this, 'add_js' ) );
-		add_action( 'admin_init',                              array( &$this, 'maybe_send_test' ) );
-		add_action( 'phpmailer_init',                          array( &$this, 'phpmailer_init' ) );
-		add_filter( 'wp_mail_from',                            array( &$this, 'wp_mail_from' ) );
-		add_filter( 'wp_mail_from_name',                       array( &$this, 'wp_mail_from_name' ) );
-		add_action( $this->get_hook( 'after_settings_form' ),  array( &$this, 'send_test_form' ) );
-		add_filter( $this->get_hook( 'before_update_option' ), array( &$this, 'maybe_gmail_override' ) );
+
+		if ( 'options-general.php' == $pagenow ) {
+			add_action( 'admin_print_footer_scripts',          array( $this, 'add_js' ) );
+		}
+		add_action( 'admin_init',                              array( $this, 'maybe_send_test' ) );
+		add_action( 'phpmailer_init',                          array( $this, 'phpmailer_init' ) );
+		add_filter( 'wp_mail_from',                            array( $this, 'wp_mail_from' ) );
+		add_filter( 'wp_mail_from_name',                       array( $this, 'wp_mail_from_name' ) );
+		add_action( $this->get_hook( 'after_settings_form' ),  array( $this, 'send_test_form' ) );
+		add_filter( $this->get_hook( 'before_update_option' ), array( $this, 'maybe_gmail_override' ) );
 	}
 
 	/**
