@@ -362,8 +362,8 @@ JS;
 
 		$phpmailer->IsSMTP();
 		$phpmailer->Host = $options['host'];
-		$phpmailer->Port = $options['port'] ? $options['port'] : 25;
-		$phpmailer->SMTPAuth = $options['smtp_auth'] ? $options['smtp_auth'] : false;
+		$phpmailer->Port = $options['port'] ? (int) $options['port'] : 25;
+		$phpmailer->SMTPAuth = (bool) $options['smtp_auth'];
 		if ( $phpmailer->SMTPAuth ) {
 			$phpmailer->Username = $options['smtp_user'];
 			$phpmailer->Password = $options['smtp_pass'];
@@ -371,7 +371,7 @@ JS;
 		if ( $options['smtp_secure'] != '' ) {
 			$phpmailer->SMTPSecure = $options['smtp_secure'];
 		}
-		if ( $options['wordwrap'] > 0 ) {
+		if ( (int) $options['wordwrap'] > 0 ) {
 			$phpmailer->WordWrap = (int) $options['wordwrap'];
 		}
 		if ( $options['debug'] ) {
