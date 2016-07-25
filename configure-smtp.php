@@ -60,16 +60,30 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 	/**
 	 * The one true instance.
 	 *
+	 * @access private
 	 * @var c2c_ConfigureSMTP
 	 */
 	private static $instance;
 
+	/**
+	 * Default GMail configuration options.
+	 *
+	 * @access private
+	 * @var array
+	 */
 	private $gmail_config = array(
 		'host'        => 'smtp.gmail.com',
 		'port'        => '465',
 		'smtp_auth'   => true,
 		'smtp_secure' => 'ssl'
 	);
+
+	/**
+	 * Error message.
+	 *
+	 * @access private
+	 * @var string
+	 */
 	private $error_msg = '';
 
 	/**
@@ -86,7 +100,7 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 	}
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 */
 	protected function __construct() {
 		parent::__construct( '3.1', 'configure-smtp', 'c2c', __FILE__, array() );
@@ -99,8 +113,6 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 	 * Handles activation tasks, such as registering the uninstall hook.
 	 *
 	 * @since 3.1
-	 *
-	 * @return void
 	 */
 	public static function activation() {
 		register_uninstall_hook( __FILE__, array( __CLASS__, 'uninstall' ) );
@@ -110,8 +122,6 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 	 * Handles uninstallation tasks, such as deleting plugin options.
 	 *
 	 * @since 3.1
-	 *
-	 * @return void
 	 */
 	public static function uninstall() {
 		delete_option( 'c2c_configure_smtp' );
@@ -119,8 +129,6 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 
 	/**
 	 * Initializes the plugin's configuration and localizable text variables.
-	 *
-	 * @return void
 	 */
 	public function load_config() {
 		$this->name      = __( 'Configure SMTP', $this->textdomain );
@@ -204,8 +212,6 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 
 	/**
 	 * Override the plugin framework's register_filters() to actually actions against filters.
-	 *
-	 * @return void
 	 */
 	public function register_filters() {
 		global $pagenow;
@@ -224,7 +230,7 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 	/**
 	 * Outputs the text above the setting form.
 	 *
-	 * @param string $localized_heading_text Optional. Localized page heading text.
+	 * @param string $localized_heading_text Optional. Localized page heading text. Default ''.
 	 */
 	public function options_page_description( $localized_heading_text = '' ) {
 		$options = $this->get_options();
@@ -242,9 +248,7 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 	}
 
 	/**
-	 * Outputs JavaScript
-	 *
-	 * @return void (Text is echoed.)
+	 * Outputs JavaScript.
 	 */
 	public function add_js() {
 		$alert = __( 'Be sure to specify your full GMail email address (including the "@gmail.com") as the SMTP username, and your GMail password as the SMTP password.', $this->textdomain );
@@ -274,10 +278,10 @@ JS;
 	}
 
 	/**
-	 * If the 'Use GMail' option is checked, the GMail settings will override whatever the user may have provided
+	 * If the 'Use GMail' option is checked, the GMail settings will override whatever the user may have provided.
 	 *
-	 * @param array $options The options array prior to saving
-	 * @return array The options array with GMail settings taking precedence, if relevant
+	 * @param  array $options The options array prior to saving.
+	 * @return array The options array with GMail settings taking precedence, if relevant.
 	 */
 	public function maybe_gmail_override( $options ) {
 		// If GMail is to be used, those settings take precendence
@@ -344,10 +348,9 @@ JS;
 	}
 
 	/**
-	 * Configures PHPMailer object during its initialization stage
+	 * Configures PHPMailer object during its initialization stage.
 	 *
-	 * @param object $phpmailer PHPMailer object
-	 * @return void
+	 * @param object $phpmailer PHPMailer object.
 	 */
 	public function phpmailer_init( $phpmailer ) {
 		$options = $this->get_options();
@@ -395,7 +398,7 @@ JS;
 	/**
 	 * Configures the "From:" name for outgoing emails.
 	 *
-	 * @param string $from The "from" name used by WordPress by default
+	 * @param  string $from The "from" name used by WordPress by default
 	 * @return string The potentially new "from" name, if overridden via the plugin's settings.
 	 */
 	public function wp_mail_from_name( $from_name ) {

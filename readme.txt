@@ -90,6 +90,7 @@ The connection to the SMTP server was successful, but the credentials you provid
 * Change: Discontinue use of PHP4-style constructor.
 * Change: Prevent execution of code if file is directly accessed.
 * Change: Minor code reformatting (spacing, bracing, conditional comparison order).
+* Change: Minor documentation reformatting (spacing, punctuation).
 * Change: Re-license as GPLv2 or later (from X11).
 * New: Add 'License' and 'License URI' header tags to readme.txt and plugin file.
 * New: Add LICENSE file.
@@ -200,7 +201,7 @@ The connection to the SMTP server was successful, but the credentials you provid
 Recommended update. Highlights: fixed numerous bugs; added a debug mode; updated compatibility through WP 3.2; dropped compatibility with version of WP older than 3.0; updated plugin framework.
 
 = 3.0.1 =
-Minor update.  Use password input field for SMTP password instead of regular text input field.
+Minor update. Use password input field for SMTP password instead of regular text input field.
 
 = 3.0 =
 Recommended update! This release includes a major re-implementation, bug fixes, localization support, and more.
