@@ -289,7 +289,7 @@ JS;
 	}
 
 	/**
-	 * Sends test e-mail if form was submitted requesting to do so.
+	 * Sends test email if form was submitted requesting to do so.
 	 *
 	 */
 	public function maybe_send_test() {
@@ -299,33 +299,33 @@ JS;
 			$user      = wp_get_current_user();
 			$email     = $user->user_email;
 			$timestamp = current_time( 'mysql' );
-			$message = sprintf( __( 'Hi, this is the %s plugin e-mailing you a test message from your WordPress blog.', $this->textdomain ), $this->name );
+
+			$message = sprintf( __( 'Hi, this is the %s plugin emailing you a test message from your WordPress blog.', $this->textdomain ), $this->name );
 			$message .= "\n\n";
 			$message .= sprintf( __( 'This message was sent with this time-stamp: %s', $this->textdomain ), $timestamp );
 			$message .= "\n\n";
-			$message .= __( 'Congratulations!  Your blog is properly configured to send e-mail.', $this->textdomain );
+			$message .= __( 'Congratulations!  Your blog is properly configured to send email.', $this->textdomain );
+
 			wp_mail( $email, __( 'Test message from your WordPress blog', $this->textdomain ), $message );
 
 			// Check success
 			global $phpmailer;
 
 			if ( $phpmailer->ErrorInfo != "" ) {
-				$this->error_msg  = '<div class="error"><p>' . __( 'An error was encountered while trying to send the test e-mail.', $this->textdomain ) . '</p>';
+				$this->error_msg  = '<div class="error"><p>' . __( 'An error was encountered while trying to send the test email.', $this->textdomain ) . '</p>';
 				$this->error_msg .= '<blockquote style="font-weight:bold;">';
 				$this->error_msg .= '<p>' . $phpmailer->ErrorInfo . '</p>';
 				$this->error_msg .= '</p></blockquote>';
 				$this->error_msg .= '</div>';
 			} else {
-				$this->error_msg  = '<div class="updated"><p>' . __( 'Test e-mail sent.', $this->textdomain ) . '</p>';
-				$this->error_msg .= '<p>' . sprintf( __( 'The body of the e-mail includes this time-stamp: %s.', $this->textdomain ), $timestamp ) . '</p></div>';
+				$this->error_msg  = '<div class="updated"><p>' . __( 'Test email sent.', $this->textdomain ) . '</p>';
+				$this->error_msg .= '<p>' . sprintf( __( 'The body of the email includes this time-stamp: %s.', $this->textdomain ), $timestamp ) . '</p></div>';
 			}
 		}
 	}
 
 	/*
-	 * Outputs form to send test e-mail.
-	 *
-	 * @return void (Text will be echoed.)
+	 * Outputs form to send test email.
 	 */
 	public function send_test_form() {
 		$user       = wp_get_current_user();
@@ -333,13 +333,13 @@ JS;
 		$action_url = $this->form_action_url();
 
 		echo '<div class="wrap"><h2><a name="test"></a>' . __( 'Send A Test', $this->textdomain ) . "</h2>\n";
-		echo '<p>' . __( 'Click the button below to send a test email to yourself to see if things are working.  Be sure to save any changes you made to the form above before sending the test e-mail.  Bear in mind it may take a few minutes for the e-mail to wind its way through the internet.', $this->textdomain ) . "</p>\n";
-		echo '<p>' . sprintf( __( 'This e-mail will be sent to your e-mail address, %s.', $this->textdomain ), $email ) . "</p>\n";
-		echo '<p><em>You must save any changes to the form above before attempting to send a test e-mail.</em></p>';
+		echo '<p>' . __( 'Click the button below to send a test email to yourself to see if things are working. Be sure to save any changes you made to the form above before sending the test email. Bear in mind it may take a few minutes for the email to wind its way through the internet.', $this->textdomain ) . "</p>\n";
+		echo '<p>' . sprintf( __( 'This email will be sent to your email address, %s.', $this->textdomain ), $email ) . "</p>\n";
+		echo '<p><em>You must save any changes to the form above before attempting to send a test email.</em></p>';
 		echo "<form name='configure_smtp' action='$action_url' method='post'>\n";
 		wp_nonce_field( $this->nonce_field );
 		echo '<input type="hidden" name="' . $this->get_form_submit_name( 'submit_test_email' ) .'" value="1" />';
-		echo '<div class="submit"><input type="submit" name="Submit" value="' . esc_attr__( 'Send test e-mail', $this->textdomain ) . '" /></div>';
+		echo '<div class="submit"><input type="submit" name="Submit" value="' . esc_attr__( 'Send test email', $this->textdomain ) . '" /></div>';
 		echo '</form></div>';
 	}
 
@@ -377,10 +377,10 @@ JS;
 	}
 
 	/**
-	 * Configures the "From:" e-mail address for outgoing e-mails
+	 * Configures the "From:" email address for outgoing emails.
 	 *
-	 * @param string $from The "from" e-mail address used by WordPress by default
-	 * @return string The potentially new "from" e-mail address, if overridden via the plugin's settings.
+	 * @param  string $from The "from" email address used by WordPress by default
+	 * @return string The potentially new "from" email address, if overridden via the plugin's settings.
 	 */
 	public function wp_mail_from( $from ) {
 		$options = $this->get_options();
@@ -393,7 +393,7 @@ JS;
 	}
 
 	/**
-	 * Configures the "From:" name for outgoing e-mails
+	 * Configures the "From:" name for outgoing emails.
 	 *
 	 * @param string $from The "from" name used by WordPress by default
 	 * @return string The potentially new "from" name, if overridden via the plugin's settings.
