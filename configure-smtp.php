@@ -256,14 +256,12 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 		echo <<<JS
 		<script type="text/javascript">
 			function configure_gmail() {
-				// The .attr('checked') == true is only for pre-WP3.2
-				if (jQuery('#use_gmail').attr('checked') == 'checked' || jQuery('#use_gmail').attr('checked') == true) {
+				if (jQuery('#use_gmail').attr('checked') == 'checked') {
 					jQuery('#host').val('{$this->gmail_config['host']}');
 					jQuery('#port').val('{$this->gmail_config['port']}');
-					if (jQuery('#use_gmail').attr('checked') == 'checked')
+					if (jQuery('#use_gmail').attr('checked') == 'checked') {
 						jQuery('#smtp_auth').prop('checked', $checked);
-					else // pre WP-3.2 only
-						jQuery('#smtp_auth').attr('checked', {$this->gmail_config['smtp_auth']});
+					}
 					jQuery('#smtp_secure').val('{$this->gmail_config['smtp_secure']}');
 					if (!jQuery('#smtp_user').val().match(/.+@gmail.com$/) ) {
 						jQuery('#smtp_user').val('USERNAME@gmail.com').focus().get(0).setSelectionRange(0,8);
