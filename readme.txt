@@ -85,6 +85,7 @@ The connection to the SMTP server was successful, but the credentials you provid
     * Make class final.
     * Additional related changes in plugin framework (protected constructor, erroring `__clone()` and `__wakeup()`).
 * Change: Cast submitted 'smtp_auth' (bool), 'port' (int), and 'wordwrap' (int) values to proper type before use.
+* Change: Verify submitted 'smtp_secure' value is one of the viable options.
 * Change: Use explicit path when requiring plugin framework.
 * Fix: Explicitly declare `activation()` and `uninstall()` static.
 * Fix: For `options_page_description()`, match method signature of parent class.

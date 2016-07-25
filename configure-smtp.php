@@ -368,7 +368,7 @@ JS;
 			$phpmailer->Username = $options['smtp_user'];
 			$phpmailer->Password = $options['smtp_pass'];
 		}
-		if ( $options['smtp_secure'] != '' ) {
+		if ( $options['smtp_secure'] && in_array( $options['smtp_secure'], $this->config['smtp_secure']['options'] ) ) {
 			$phpmailer->SMTPSecure = $options['smtp_secure'];
 		}
 		if ( (int) $options['wordwrap'] > 0 ) {
