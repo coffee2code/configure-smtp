@@ -131,81 +131,81 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 	 * Initializes the plugin's configuration and localizable text variables.
 	 */
 	public function load_config() {
-		$this->name      = __( 'Configure SMTP', $this->textdomain );
-		$this->menu_name = __( 'SMTP', $this->textdomain );
+		$this->name      = __( 'Configure SMTP', 'configure-smtp' );
+		$this->menu_name = __( 'SMTP', 'configure-smtp' );
 
 		$this->config = array(
 			'use_gmail'    => array(
 				'input'    => 'checkbox',
 				'default'  => false,
-				'label'    => __( 'Send email via GMail?', $this->textdomain ),
-				'help'     => __( 'Clicking this will override many of the settings defined below. You will need to input your GMail username and password below.', $this->textdomain ),
+				'label'    => __( 'Send email via GMail?', 'configure-smtp' ),
+				'help'     => __( 'Clicking this will override many of the settings defined below. You will need to input your GMail username and password below.', 'configure-smtp' ),
 				'input_attributes' => 'onclick="return configure_gmail();"',
 			),
 			'host' => array(
 				'input'    => 'text',
 				'default'  => 'localhost',
 				'require'  => true,
-				'label'    => __( 'SMTP host', $this->textdomain ),
-				'help'     => __( 'If "localhost" doesn\'t work for you, check with your host for the SMTP hostname.', $this->textdomain ),
+				'label'    => __( 'SMTP host', 'configure-smtp' ),
+				'help'     => __( 'If "localhost" doesn\'t work for you, check with your host for the SMTP hostname.', 'configure-smtp' ),
 			),
 			'port' => array(
 				'input'    => 'short_text',
 				'default'  => 25,
 				'datatype' => 'int',
 				'required' => true,
-				'label'    => __( 'SMTP port', $this->textdomain ),
-				'help'     => __( 'This is generally 25.', $this->textdomain ),
+				'label'    => __( 'SMTP port', 'configure-smtp' ),
+				'help'     => __( 'This is generally 25.', 'configure-smtp' ),
 			),
 			'smtp_secure' => array(
 				'input'    => 'select',
 				'default'  => 'None',
-				'label'    => __( 'Secure connection prefix', $this->textdomain ),
+				'label'    => __( 'Secure connection prefix', 'configure-smtp' ),
 				'options'  => array( '', 'ssl', 'tls' ),
-				'help'     => __( 'Sets connection prefix for secure connections (prefix method must be supported by your PHP install and your SMTP host)', $this->textdomain ),
+				'help'     => __( 'Sets connection prefix for secure connections (prefix method must be supported by your PHP install and your SMTP host)', 'configure-smtp' ),
 			),
 			'smtp_auth'	=> array(
 				'input'    => 'checkbox',
 				'default'  => false,
-				'label'    => __( 'Use SMTPAuth?', $this->textdomain ),
-				'help'     => __( 'If checked, you must provide the SMTP username and password below', $this->textdomain ),
+				'label'    => __( 'Use SMTPAuth?', 'configure-smtp' ),
+				'help'     => __( 'If checked, you must provide the SMTP username and password below', 'configure-smtp' ),
 			),
 			'smtp_user'	=> array(
 				'input'    => 'text',
 				'default'  => '',
-				'label'    => __( 'SMTP username', $this->textdomain ),
+				'label'    => __( 'SMTP username', 'configure-smtp' ),
 				'help'     => '',
 			),
 			'smtp_pass'	=> array(
 				'input'    => 'password',
 				'default'  => '',
-				'label'    => __( 'SMTP password', $this->textdomain ),
+				'label'    => __( 'SMTP password', 'configure-smtp' ),
 				'help'     => '',
 			),
 			'wordwrap' => array(
 				'input'    => 'short_text',
 				'default'  => '',
-				'label'    => __( 'Wordwrap length', $this->textdomain ),
-				'help'     => __( 'Sets word wrapping on the body of the message to a given number of characters.', $this->textdomain ),
+				'label'    => __( 'Wordwrap length', 'configure-smtp' ),
+				'help'     => __( 'Sets word wrapping on the body of the message to a given number of characters.', 'configure-smtp' ),
 			),
 			'debug' => array(
 				'input'    => 'checkbox',
 				'default'  => false,
-				'label'    => __( 'Enable debugging?', $this->textdomain ),
-				'help'     => __( 'Only check this if you are experiencing problems and would like more error reporting to occur. <em>Uncheck this once you have finished debugging.</em>', $this->textdomain ),
+				'label'    => __( 'Enable debugging?', 'configure-smtp' ),
+				'help'     => __( 'Only check this if you are experiencing problems and would like more error reporting to occur. <em>Uncheck this once you have finished debugging.</em>', 'configure-smtp' ),
 			),
 			'hr' => array(),
 			'from_email' => array(
 				'input'    => 'text',
 				'default'  => '',
-				'label'    => __( 'Sender email', $this->textdomain ),
-				'help'     => __( 'Sets the From email address for all outgoing messages. Leave blank to use the WordPress default. This value will be used even if you don\'t enable SMTP. NOTE: This may not take effect depending on your mail server and settings, especially if using SMTPAuth (such as for GMail).', $this->textdomain ),
+				'label'    => __( 'Sender email', 'configure-smtp' ),
+				'help'     => __( 'Sets the From email address for all outgoing messages. Leave blank to use the WordPress default. This value will be used even if you don\'t enable SMTP. NOTE: This may not take effect depending on your mail server and settings, especially if using SMTPAuth (such as for GMail).', 'configure-smtp' ),
 			),
 			'from_name'	=> array(
 				'input'    => 'text',
 				'default'  => '',
-				'label'    => __( 'Sender name', $this->textdomain ),
-				'help'     => __( 'Sets the From name for all outgoing messages. Leave blank to use the WordPress default. This value will be used even if you don\'t enable SMTP.', $this->textdomain ),
+				'label'    => __( 'Sender name', 'configure-smtp' ),
+				'help'     => __( 'Sets the From name for all outgoing messages. Leave blank to use the WordPress default. This value will be used even if you don\'t enable SMTP.', 'configure-smtp' ),
 			),
 		);
 	}
@@ -234,24 +234,24 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 	 */
 	public function options_page_description( $localized_heading_text = '' ) {
 		$options = $this->get_options();
-		parent::options_page_description( __( 'Configure SMTP Settings', $this->textdomain ) );
+		parent::options_page_description( __( 'Configure SMTP Settings', 'configure-smtp' ) );
 
 		if ( ! empty( $this->error_msg ) ) {
 			echo $this->error_msg;
 		}
 
-		$str = '<a href="#test">' . __( 'test', $this->textdomain ) . '</a>';
+		$str = '<a href="#test">' . __( 'test', 'configure-smtp' ) . '</a>';
 		if ( empty( $options['host'] ) ) {
 			echo '<div class="error"><p>' . __( 'SMTP mailing is currently <strong>NOT ENABLED</strong> because no SMTP host has been specified.' ) . '</p></div>';
 		}
-		echo '<p>' . sprintf( __( 'After you have configured your SMTP settings, use the %s to send a test message to yourself.', $this->textdomain ), $str ) . '</p>';
+		echo '<p>' . sprintf( __( 'After you have configured your SMTP settings, use the %s to send a test message to yourself.', 'configure-smtp' ), $str ) . '</p>';
 	}
 
 	/**
 	 * Outputs JavaScript.
 	 */
 	public function add_js() {
-		$alert = __( 'Be sure to specify your full GMail email address (including the "@gmail.com") as the SMTP username, and your GMail password as the SMTP password.', $this->textdomain );
+		$alert = __( 'Be sure to specify your full GMail email address (including the "@gmail.com") as the SMTP username, and your GMail password as the SMTP password.', 'configure-smtp' );
 		$checked = $this->gmail_config['smtp_auth'] ? '1' : '';
 		echo <<<JS
 		<script type="text/javascript">
@@ -302,26 +302,26 @@ JS;
 			$email     = $user->user_email;
 			$timestamp = current_time( 'mysql' );
 
-			$message = sprintf( __( 'Hi, this is the %s plugin emailing you a test message from your WordPress blog.', $this->textdomain ), $this->name );
+			$message = sprintf( __( 'Hi, this is the %s plugin emailing you a test message from your WordPress blog.', 'configure-smtp' ), $this->name );
 			$message .= "\n\n";
-			$message .= sprintf( __( 'This message was sent with this time-stamp: %s', $this->textdomain ), $timestamp );
+			$message .= sprintf( __( 'This message was sent with this time-stamp: %s', 'configure-smtp' ), $timestamp );
 			$message .= "\n\n";
-			$message .= __( 'Congratulations!  Your blog is properly configured to send email.', $this->textdomain );
+			$message .= __( 'Congratulations!  Your blog is properly configured to send email.', 'configure-smtp' );
 
-			wp_mail( $email, __( 'Test message from your WordPress blog', $this->textdomain ), $message );
+			wp_mail( $email, __( 'Test message from your WordPress blog', 'configure-smtp' ), $message );
 
 			// Check success
 			global $phpmailer;
 
 			if ( $phpmailer->ErrorInfo != "" ) {
-				$this->error_msg  = '<div class="error"><p>' . __( 'An error was encountered while trying to send the test email.', $this->textdomain ) . '</p>';
+				$this->error_msg  = '<div class="error"><p>' . __( 'An error was encountered while trying to send the test email.', 'configure-smtp' ) . '</p>';
 				$this->error_msg .= '<blockquote style="font-weight:bold;">';
 				$this->error_msg .= '<p>' . $phpmailer->ErrorInfo . '</p>';
 				$this->error_msg .= '</p></blockquote>';
 				$this->error_msg .= '</div>';
 			} else {
-				$this->error_msg  = '<div class="updated"><p>' . __( 'Test email sent.', $this->textdomain ) . '</p>';
-				$this->error_msg .= '<p>' . sprintf( __( 'The body of the email includes this time-stamp: %s.', $this->textdomain ), $timestamp ) . '</p></div>';
+				$this->error_msg  = '<div class="updated"><p>' . __( 'Test email sent.', 'configure-smtp' ) . '</p>';
+				$this->error_msg .= '<p>' . sprintf( __( 'The body of the email includes this time-stamp: %s.', 'configure-smtp' ), $timestamp ) . '</p></div>';
 			}
 		}
 	}
@@ -334,14 +334,14 @@ JS;
 		$email      = $user->user_email;
 		$action_url = $this->form_action_url();
 
-		echo '<div class="wrap"><h2><a name="test"></a>' . __( 'Send A Test', $this->textdomain ) . "</h2>\n";
-		echo '<p>' . __( 'Click the button below to send a test email to yourself to see if things are working. Be sure to save any changes you made to the form above before sending the test email. Bear in mind it may take a few minutes for the email to wind its way through the internet.', $this->textdomain ) . "</p>\n";
-		echo '<p>' . sprintf( __( 'This email will be sent to your email address, %s.', $this->textdomain ), $email ) . "</p>\n";
+		echo '<div class="wrap"><h2><a name="test"></a>' . __( 'Send A Test', 'configure-smtp' ) . "</h2>\n";
+		echo '<p>' . __( 'Click the button below to send a test email to yourself to see if things are working. Be sure to save any changes you made to the form above before sending the test email. Bear in mind it may take a few minutes for the email to wind its way through the internet.', 'configure-smtp' ) . "</p>\n";
+		echo '<p>' . sprintf( __( 'This email will be sent to your email address, %s.', 'configure-smtp' ), $email ) . "</p>\n";
 		echo '<p><em>You must save any changes to the form above before attempting to send a test email.</em></p>';
 		echo "<form name='configure_smtp' action='$action_url' method='post'>\n";
 		wp_nonce_field( $this->nonce_field );
 		echo '<input type="hidden" name="' . $this->get_form_submit_name( 'submit_test_email' ) .'" value="1" />';
-		echo '<div class="submit"><input type="submit" name="Submit" value="' . esc_attr__( 'Send test email', $this->textdomain ) . '" /></div>';
+		echo '<div class="submit"><input type="submit" name="Submit" value="' . esc_attr__( 'Send test email', 'configure-smtp' ) . '" /></div>';
 		echo '</form></div>';
 	}
 

@@ -90,6 +90,9 @@ The connection to the SMTP server was successful, but the credentials you provid
 * Change: Use explicit path when requiring plugin framework.
 * Fix: Explicitly declare `activation()` and `uninstall()` static.
 * Fix: For `options_page_description()`, match method signature of parent class.
+* Change: Add support for language packs:
+    * Set textdomain using a string instead of a variable.
+    * Remove .pot file and /lang subdirectory.
 * Change: Discontinue use of PHP4-style constructor.
 * Change: Prevent execution of code if file is directly accessed.
 * Change: Minor code reformatting (spacing, bracing, conditional comparison order).
