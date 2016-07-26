@@ -86,6 +86,7 @@ The connection to the SMTP server was successful, but the credentials you provid
     * Additional related changes in plugin framework (protected constructor, erroring `__clone()` and `__wakeup()`).
 * Change: Cast submitted 'smtp_auth' (bool), 'port' (int), and 'wordwrap' (int) values to proper type before use.
 * Change: Verify submitted 'smtp_secure' value is one of the viable options.
+* New: Add class constant `SETTING_NAME` (to store setting name) and use it in `uninstall()`.
 * Change: Remove pre-WP3.2-only JavaScript code.
 * Change: Use explicit path when requiring plugin framework.
 * Fix: Explicitly declare `activation()` and `uninstall()` static.

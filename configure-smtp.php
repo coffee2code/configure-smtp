@@ -58,6 +58,13 @@ require_once( dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'c2c-plugin.php' );
 final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 
 	/**
+	 * Name of plugin's setting.
+	 *
+	 * @var string
+	 */
+	const SETTING_NAME = 'c2c_configure_smtp';
+
+	/**
 	 * The one true instance.
 	 *
 	 * @access private
@@ -124,7 +131,7 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 	 * @since 3.1
 	 */
 	public static function uninstall() {
-		delete_option( 'c2c_configure_smtp' );
+		delete_option( self::SETTING_NAME );
 	}
 
 	/**
