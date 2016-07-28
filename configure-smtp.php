@@ -147,7 +147,6 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 				'default'  => false,
 				'label'    => __( 'Send email via GMail?', 'configure-smtp' ),
 				'help'     => __( 'Clicking this will override many of the settings defined below. You will need to input your GMail username and password below.', 'configure-smtp' ),
-				'input_attributes' => 'onclick="return configure_gmail();"',
 			),
 			'host' => array(
 				'input'    => 'text',
@@ -262,21 +261,21 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 		$checked = $this->gmail_config['smtp_auth'] ? '1' : '';
 		echo <<<JS
 		<script type="text/javascript">
-			function configure_gmail() {
-				if (jQuery('#use_gmail').attr('checked') == 'checked') {
-					jQuery('#host').val('{$this->gmail_config['host']}');
-					jQuery('#port').val('{$this->gmail_config['port']}');
-					if (jQuery('#use_gmail').attr('checked') == 'checked') {
-						jQuery('#smtp_auth').prop('checked', $checked);
-					}
-					jQuery('#smtp_secure').val('{$this->gmail_config['smtp_secure']}');
-					if (!jQuery('#smtp_user').val().match(/.+@gmail.com$/) ) {
-						jQuery('#smtp_user').val('USERNAME@gmail.com').focus().get(0).setSelectionRange(0,8);
+		jQuery( function($) {
+			$('#use_gmail').change(function(e) {
+				if ( $('#use_gmail').is(':checked') ) {
+					$('#host').val('{$this->gmail_config['host']}');
+					$('#port').val('{$this->gmail_config['port']}');
+					$('#smtp_auth').prop('checked', $checked);
+					$('#smtp_secure').val('{$this->gmail_config['smtp_secure']}');
+					if ( ! $('#smtp_user').val().match(/.+@gmail.com$/) ) {
+						$('#smtp_user').val('USERNAME@gmail.com').focus().get(0).setSelectionRange(0,8);
 					}
 					alert('{$alert}');
 					return true;
 				}
-			}
+			});
+		});
 		</script>
 
 JS;
