@@ -78,6 +78,7 @@ The connection to the SMTP server was successful, but the credentials you provid
 
 = () =
 * Change: Handle 'Send email via GMail?' checkbox changes with JS event listener rather than explicit 'onclick'.
+* Change: Move JS into file and enqueue rather outputting directly into footer.
 * Change: Update plugin framework to 045. (Too many changes to list.)
 * Change: Improve singleton implementation.
     * Add `get_instance()` static method for returning/creating singleton instance.

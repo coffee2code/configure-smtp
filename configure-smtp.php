@@ -220,11 +220,7 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 	 * Override the plugin framework's register_filters() to actually actions against filters.
 	 */
 	public function register_filters() {
-		global $pagenow;
-
-		if ( 'options-general.php' == $pagenow ) {
-			add_action( 'admin_print_footer_scripts',          array( $this, 'add_js' ) );
-		}
+		add_action( 'admin_enqueue_scripts',                   array( $this, 'enqueue_admin_js' ) );
 		add_action( 'admin_init',                              array( $this, 'maybe_send_test' ) );
 		add_action( 'phpmailer_init',                          array( $this, 'phpmailer_init' ) );
 		add_filter( 'wp_mail_from',                            array( $this, 'wp_mail_from' ) );
@@ -254,31 +250,29 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 	}
 
 	/**
-	 * Outputs JavaScript.
+	 * Enqueues JavaScript.
+	 *
+	 * @since 3.2
 	 */
-	public function add_js() {
-		$alert = __( 'Be sure to specify your full GMail email address (including the "@gmail.com") as the SMTP username, and your GMail password as the SMTP password.', 'configure-smtp' );
-		$checked = $this->gmail_config['smtp_auth'] ? '1' : '';
-		echo <<<JS
-		<script type="text/javascript">
-		jQuery( function($) {
-			$('#use_gmail').change(function(e) {
-				if ( $('#use_gmail').is(':checked') ) {
-					$('#host').val('{$this->gmail_config['host']}');
-					$('#port').val('{$this->gmail_config['port']}');
-					$('#smtp_auth').prop('checked', $checked);
-					$('#smtp_secure').val('{$this->gmail_config['smtp_secure']}');
-					if ( ! $('#smtp_user').val().match(/.+@gmail.com$/) ) {
-						$('#smtp_user').val('USERNAME@gmail.com').focus().get(0).setSelectionRange(0,8);
-					}
-					alert('{$alert}');
-					return true;
-				}
-			});
-		});
-		</script>
+	public function enqueue_admin_js() {
+		$screen = get_current_screen();
 
-JS;
+		if ( $screen->id === $this->options_page ) {
+			// Register script.
+			wp_register_script( $this->id_base, plugins_url( 'assets/configure-smtp.js', __FILE__ ), array( 'jquery' ), self::version(), true );
+
+			// Localize script.
+			wp_localize_script( $this->id_base, 'c2c_configure_smtp', array(
+				'alert'     => __( 'Bebebe sure to specify your full GMail email address (including the "@gmail.com") as the SMTP username, and your GMail password as the SMTP password.', 'configure-smtp' ),
+				'checked'   => $this->gmail_config['smtp_auth'] ? '1' : '',
+				'host'      => $this->gmail_config['host'],
+				'port'      => $this->gmail_config['port'],
+				'smtp_auth' => $this->gmail_config['smtp_secure'],
+			) );
+
+			// Enqueue script.
+			wp_enqueue_script( $this->id_base );
+		}
 	}
 
 	/**
