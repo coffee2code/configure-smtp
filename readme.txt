@@ -15,58 +15,60 @@ Configure SMTP mailing in WordPress, including support for sending email via SSL
 
 Configure SMTP mailing in WordPress, including support for sending email via SSL/TLS (such as GMail).
 
-This plugin is the renamed, rewritten, and updated version of the wpPHPMailer plugin.
+This plugin is the official successor to the original SMTP plugin for WordPress (wpPHPMailer).
 
 Use this plugin to customize the SMTP mailing system used by default by WordPress to handle *outgoing* emails. It offers you the ability to specify:
 
 * SMTP host name
 * SMTP port number
-* If SMTPAuth (authentication) should be used.
+* If SMTPAuth (authentication) should be used
 * SMTP username
 * SMTP password
 * If the SMTP connection needs to occur over ssl or tls
 
-In addition, you can instead indicate that you wish to use GMail to handle outgoing email, in which case the above settings are automatically configured to values appropriate for GMail, though you'll need to specify your GMail email (including the "@gmail.com") and password.
+In addition, you can instead indicate that you wish to use GMail to handle outgoing email, in which case the above settings are automatically configured to values appropriate for GMail, though you'll need to specify your GMail email address (including the "@gmail.com") and password.
 
 Regardless of whether SMTP is enabled, the plugin provides you the ability to define the name and email of the 'From:' field for all outgoing emails.
 
-A simple test button is also available that allows you to send a test email to yourself to check if sending email has been properly configured for your blog.
+A simple test button is also available that allows you to send a test email to yourself to check if sending email has been properly configured for your site.
 
-Links: [Plugin Homepage](http://coffee2code.com/wp-plugins/configure-smtp/) | [Author Homepage](http://coffee2code.com)
+Links: [Plugin Homepage](http://coffee2code.com/wp-plugins/configure-smtp/) | [Plugin Directory Page](https://wordpress.org/plugins/configure-smtp/) | [Author Homepage](http://coffee2code.com)
 
 
 == Installation ==
 
-1. Unzip `configure-smtp.zip` inside the `/wp-content/plugins/` directory (or install via the built-in WordPress plugin installer)
+1. Whether installing or updating, whether this plugin or any other, it is always advisable to back-up your data before starting.
+1. Install via the built-in WordPress plugin installer. Or download and unzip `configure-smtp.zip` inside the plugins directory for your site (typically `/wp-content/plugins/`).
 1. Activate the plugin through the 'Plugins' admin menu in WordPress
-1. Click the plugin's `Settings` link next to its `Deactivate` link (still on the Plugins page), or click on the `Settings` -> `SMTP` link, to go to the plugin's admin settings page. Optionally customize the settings (to configure it if the defaults aren't valid for your situation).
-1. (optional) Use the built-in test to see if your blog can properly send out emails.
+1. Click the plugin's `Settings` link next to its `Deactivate` link (if still on the Plugins listing page), or click on the `Settings` -> `SMTP` link, to go to the plugin's admin settings page. Optionally customize the settings (to configure it if the defaults aren't valid for your situation).
+1. (Optional.) Use the built-in test to see if your blog can properly send out emails.
 
 
 == Frequently Asked Questions ==
 
-= I am already able to receive email sent by my blog, so would I have any use or need for this plugin? =
+= I am already able to receive email sent by my site, so would I have any use or need for this plugin? =
 
 Most likely, no. Not unless you have a preference for having your mail sent out via a different SMTP server, such as GMail.
 
 = How do I find out my SMTP host, and/or if I need to use SMTPAuth and what my username and password for that are? =
 
-Check out the settings for your local email program. More than likely that is configured to use an outgoing SMTP server. Otherwise, contact your host or someone more intimately knowledgeable about your situation.
+Check out the settings for your local email program. More than likely that is configured to use an outgoing SMTP server. Otherwise, read through documentation provided by your host or contact them (or someone more intimately knowledgeable about your situation) directly.
 
 = I've sent out a few test emails using the test button after having tried different values for some of the settings; how do I know which one worked? =
 
-If your settings worked, you should receive the test email at the email address associated with your WordPress blog user account. That email contains a time-stamp which was reported to you by the plugin when the email was sent. If you are trying out various setting values, be sure to record what your settings were and what the time-stamp was when sending with those settings.
+If your settings worked, you should receive the test email at the email address associated with your WordPress site user account. That email contains a timestamp which was reported to you by the plugin when the email was sent. If you are trying out various setting values, be sure to record what your settings were and what the timestamp was when sending with those settings.
 
 = Why am I getting this error when attempting to send a test message: `SMTP Error: Could not connect to SMTP host.`? =
 
 There are a number of reasons you could be getting this error:
-# Your server (or a router to which it is connected) may be blocking all outgoing SMTP traffic.
-# Your mail server may be configured to allow SMTP connections only from certain servers.
-# You have supplied incorrect server settings (hostname, port number, secure protocol type).
+
+* Your server (or a router to which it is connected) may be blocking all outgoing SMTP traffic.
+* Your mail server may be configured to allow SMTP connections only from certain servers.
+* You have supplied incorrect server settings (hostname, port number, secure protocol type).
 
 = What am I getting this error: `SMTP Error: Could not authenticate.`? =
 
-The connection to the SMTP server was successful, but the credentials you provided (username and/or password) are not correct.
+The connection to the SMTP server was successful, but the credentials you provided (username and/or password) are not correct. Bear in mind these credentials are likely unrelated to the ones you use to log into your site.
 
 
 == Screenshots ==
