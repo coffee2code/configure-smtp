@@ -28,6 +28,21 @@ class Configure_SMTP_Test extends WP_UnitTestCase {
 		);
 	}
 
+	public function get_settings_with_defaults() {
+		return array(
+			array( array( 'use_gmail',   false ) ),
+			array( array( 'host',        'localhost' ) ),
+			array( array( 'port',        25 ) ),
+			array( array( 'smtp_secure', 'None' ) ),
+			array( array( 'smtp_auth',   false ) ),
+			array( array( 'smtp_user',   '' ) ),
+			array( array( 'smtp_pass',   '' ) ),
+			array( array( 'wordwrap',    '' ) ),
+			array( array( 'from_email',  '' ) ),
+			array( array( 'from_name',   '' ) ),
+		);
+	}
+
 
 	//
 	//
@@ -72,6 +87,27 @@ class Configure_SMTP_Test extends WP_UnitTestCase {
 
 	public function test_instance_object_is_returned() {
 		$this->assertTrue( is_a( c2c_ConfigureSMTP::get_instance(), 'c2c_ConfigureSMTP' ) );
+	}
+
+	/**
+	 * @dataProvider get_settings_with_defaults
+	 */
+	public function test_default_of_setting( $data ) {
+		list( $field, $val ) = $data;
+
+		$options = c2c_ConfigureSMTP::get_instance()->get_options();
+
+		if ( is_bool( $val ) ) {
+			if ( $val === true ) {
+				$this->assertTrue( $options[ $field ] );
+			} else {
+				$this->assertFalse( $options[ $field ] );
+			}
+		} elseif ( ! $val ) {
+			$this->assertEmpty( $val );
+		} else {
+			$this->assertEquals( $val, $options[ $field ] );
+		}
 	}
 
 	public function test_does_not_affect_from_email_by_default() {
