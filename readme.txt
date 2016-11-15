@@ -6,7 +6,7 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Requires at least: 4.2
 Tested up to: 4.7
-Stable tag: 3.1
+Stable tag: 3.2
 
 Configure SMTP mailing in WordPress, including support for sending email via SSL/TLS (such as Gmail).
 
@@ -78,7 +78,7 @@ The connection to the SMTP server was successful, but the credentials you provid
 
 == Changelog ==
 
-= () =
+= 3.2 (2016-11-14) =
 * New: Add unit tests.
 * Change: Handle 'Send email via Gmail?' checkbox changes with JS event listener rather than explicit 'onclick'.
 * Change: Move JS into file and enqueue rather outputting directly into footer.
@@ -209,6 +209,9 @@ The connection to the SMTP server was successful, but the credentials you provid
 
 
 == Upgrade Notice ==
+
+= 3.2 =
+Recommended long overdue update. Mostly minor backend improvements and code modernization.
 
 = 3.1 =
 Recommended update. Highlights: fixed numerous bugs; added a debug mode; updated compatibility through WP 3.2; dropped compatibility with version of WP older than 3.0; updated plugin framework.
