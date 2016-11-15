@@ -8,7 +8,7 @@
  * License:     GPLv2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: configure-smtp
- * Description: Configure SMTP mailing in WordPress, including support for sending email via SSL/TLS (such as GMail).
+ * Description: Configure SMTP mailing in WordPress, including support for sending email via SSL/TLS (such as Gmail).
  *
  * Compatible with WordPress 4.2+ through 4.6+.
  *
@@ -73,7 +73,7 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 	private static $instance;
 
 	/**
-	 * Default GMail configuration options.
+	 * Default Gmail configuration options.
 	 *
 	 * @access private
 	 * @var array
@@ -145,8 +145,8 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 			'use_gmail'    => array(
 				'input'    => 'checkbox',
 				'default'  => false,
-				'label'    => __( 'Send email via GMail?', 'configure-smtp' ),
-				'help'     => __( 'Clicking this will override many of the settings defined below. You will need to input your GMail username and password below.', 'configure-smtp' ),
+				'label'    => __( 'Send email via Gmail?', 'configure-smtp' ),
+				'help'     => __( 'Clicking this will override many of the settings defined below. You will need to input your Gmail username and password below.', 'configure-smtp' ),
 			),
 			'host' => array(
 				'input'    => 'text',
@@ -205,7 +205,7 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 				'input'    => 'text',
 				'default'  => '',
 				'label'    => __( 'Sender email', 'configure-smtp' ),
-				'help'     => __( 'Sets the From email address for all outgoing messages. Leave blank to use the WordPress default. This value will be used even if you don\'t enable SMTP. NOTE: This may not take effect depending on your mail server and settings, especially if using SMTPAuth (such as for GMail).', 'configure-smtp' ),
+				'help'     => __( 'Sets the From email address for all outgoing messages. Leave blank to use the WordPress default. This value will be used even if you don\'t enable SMTP. NOTE: This may not take effect depending on your mail server and settings, especially if using SMTPAuth (such as for Gmail).', 'configure-smtp' ),
 			),
 			'from_name'	=> array(
 				'input'    => 'text',
@@ -263,7 +263,7 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 
 			// Localize script.
 			wp_localize_script( $this->id_base, 'c2c_configure_smtp', array(
-				'alert'     => __( 'Bebebe sure to specify your full GMail email address (including the "@gmail.com") as the SMTP username, and your GMail password as the SMTP password.', 'configure-smtp' ),
+				'alert'     => __( 'Bebebe sure to specify your full Gmail email address (including the "@gmail.com") as the SMTP username, and your Gmail password as the SMTP password.', 'configure-smtp' ),
 				'checked'   => $this->gmail_config['smtp_auth'] ? '1' : '',
 				'host'      => $this->gmail_config['host'],
 				'port'      => $this->gmail_config['port'],
@@ -276,13 +276,13 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_045 {
 	}
 
 	/**
-	 * If the 'Use GMail' option is checked, the GMail settings will override whatever the user may have provided.
+	 * If the 'Use Gmail' option is checked, the Gmail settings will override whatever the user may have provided.
 	 *
 	 * @param  array $options The options array prior to saving.
-	 * @return array The options array with GMail settings taking precedence, if relevant.
+	 * @return array The options array with Gmail settings taking precedence, if relevant.
 	 */
 	public function maybe_gmail_override( $options ) {
-		// If GMail is to be used, those settings take precendence
+		// If Gmail is to be used, those settings take precendence
 		if ( $options['use_gmail'] ) {
 			$options = wp_parse_args( $this->gmail_config, $options );
 		}

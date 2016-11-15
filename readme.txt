@@ -8,12 +8,12 @@ Requires at least: 4.2
 Tested up to: 4.6
 Stable tag: 3.1
 
-Configure SMTP mailing in WordPress, including support for sending email via SSL/TLS (such as GMail).
+Configure SMTP mailing in WordPress, including support for sending email via SSL/TLS (such as Gmail).
 
 
 == Description ==
 
-Configure SMTP mailing in WordPress, including support for sending email via SSL/TLS (such as GMail).
+Configure SMTP mailing in WordPress, including support for sending email via SSL/TLS (such as Gmail).
 
 This plugin is the official successor to the original SMTP plugin for WordPress (wpPHPMailer).
 
@@ -26,7 +26,7 @@ Use this plugin to customize the SMTP mailing system used by default by WordPres
 * SMTP password
 * If the SMTP connection needs to occur over ssl or tls
 
-In addition, you can instead indicate that you wish to use GMail to handle outgoing email, in which case the above settings are automatically configured to values appropriate for GMail, though you'll need to specify your GMail email address (including the "@gmail.com") and password.
+In addition, you can instead indicate that you wish to use Gmail to handle outgoing email, in which case the above settings are automatically configured to values appropriate for Gmail, though you'll need to specify your Gmail email address (including the "@gmail.com") and password.
 
 Regardless of whether SMTP is enabled, the plugin provides you the ability to define the name and email of the 'From:' field for all outgoing emails.
 
@@ -48,7 +48,7 @@ Links: [Plugin Homepage](http://coffee2code.com/wp-plugins/configure-smtp/) | [P
 
 = I am already able to receive email sent by my site, so would I have any use or need for this plugin? =
 
-Most likely, no. Not unless you have a preference for having your mail sent out via a different SMTP server, such as GMail.
+Most likely, no. Not unless you have a preference for having your mail sent out via a different SMTP server, such as Gmail.
 
 = How do I find out my SMTP host, and/or if I need to use SMTPAuth and what my username and password for that are? =
 
@@ -80,7 +80,7 @@ The connection to the SMTP server was successful, but the credentials you provid
 
 = () =
 * New: Add unit tests.
-* Change: Handle 'Send email via GMail?' checkbox changes with JS event listener rather than explicit 'onclick'.
+* Change: Handle 'Send email via Gmail?' checkbox changes with JS event listener rather than explicit 'onclick'.
 * Change: Move JS into file and enqueue rather outputting directly into footer.
 * Change: Update plugin framework to 045. (Too many changes to list.)
 * Change: Improve singleton implementation.
@@ -107,7 +107,8 @@ The connection to the SMTP server was successful, but the credentials you provid
 * New: Add 'License' and 'License URI' header tags to readme.txt and plugin file.
 * New: Add LICENSE file.
 * New: Add empty index.php to prevent files from being listed if web server has enabled directory listings.
-* Change: Use 'email' instead of 'e-mail'.
+* Change: Use 'email' instead of 'e-mail' on-screen and in documentation.
+* Change: Use 'Gmail' instead of 'GMail' on-screen and in documentation.
 * Change: Remove file-ending PHP close tag.
 * Change: Reformat plugin header.
 * Change: Note compatibility through WP 4.5+.
