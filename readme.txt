@@ -114,7 +114,7 @@ The connection to the SMTP server was successful, but the credentials you provid
 * Change: Note compatibility through WP 4.7+.
 * Change: Dropped compatibility with version of WP older than 4.2.
 * Change: Update donate link.
-* Change: Update copyright date (2016).
+* Change: Update copyright date (2017).
 
 = 3.1 =
 * Add new debugging configuration option
