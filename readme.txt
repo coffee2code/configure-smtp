@@ -79,6 +79,10 @@ The connection to the SMTP server was successful, but the credentials you provid
 == Changelog ==
 
 = () =
+* Change: Update plugin framework to 046
+    * Fix `reset_options()` to reference instance variable `$options`.
+    * Note compatibility through WP 4.7+.
+    * Update copyright date (2017)
 * New: Add README.md
 * Change: Add GitHub link to readme
 * Change: Note compatibility through WP 4.9+

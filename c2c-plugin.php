@@ -2,17 +2,17 @@
 /**
  * @package C2C_Plugins
  * @author  Scott Reilly
- * @version 045
+ * @version 046
  */
 /*
 Basis for other plugins.
 
-Compatible with WordPress 3.6+ through 4.5+.
+Compatible with WordPress 3.6+ through 4.7+.
 
 */
 
 /*
-	Copyright (c) 2010-2016 by Scott Reilly (aka coffee2code)
+	Copyright (c) 2010-2017 by Scott Reilly (aka coffee2code)
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -31,9 +31,9 @@ Compatible with WordPress 3.6+ through 4.5+.
 
 defined( 'ABSPATH' ) or die();
 
-if ( ! class_exists( 'c2c_ConfigureSMTP_Plugin_045' ) ) :
+if ( ! class_exists( 'c2c_ConfigureSMTP_Plugin_046' ) ) :
 
-abstract class c2c_ConfigureSMTP_Plugin_045 {
+abstract class c2c_ConfigureSMTP_Plugin_046 {
 	protected $plugin_css_version = '009';
 	protected $options            = array();
 	protected $options_from_db    = '';
@@ -65,7 +65,7 @@ abstract class c2c_ConfigureSMTP_Plugin_045 {
 	 * @since 040
 	 */
 	public function c2c_plugin_version() {
-		return '045';
+		return '046';
 	}
 
 	/**
@@ -357,9 +357,9 @@ abstract class c2c_ConfigureSMTP_Plugin_045 {
 		if ( $option = get_option( $this->admin_options_name ) ) {
 			// Unset the options (so that in get_options() the defaults are used).
 			foreach ( $this->get_option_names() as $opt ) {
-				unset( $options[ $opt ] );
+				unset( $this->options[ $opt ] );
 			}
-			update_option( $this->admin_options_name, $options );
+			update_option( $this->admin_options_name, $this->options );
 		}
 
 		$this->options = $this->get_options( false );
