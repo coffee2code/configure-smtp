@@ -4,8 +4,8 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: email, smtp, gmail, sendmail, wp_mail, phpmailer, outgoing mail, tls, ssl, security, privacy, wp-phpmailer, coffee2code
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Requires at least: 4.2
-Tested up to: 4.7
+Requires at least: 4.7
+Tested up to: 4.9
 Stable tag: 3.2
 
 Configure SMTP mailing in WordPress, including support for sending email via SSL/TLS (such as Gmail).
@@ -77,6 +77,10 @@ The connection to the SMTP server was successful, but the credentials you provid
 
 
 == Changelog ==
+
+= () =
+* Change: Note compatibility through WP 4.9+
+* Change: Drop compatibility with versions of WP older than 4.7
 
 = 3.2 (2016-11-14) =
 * New: Add unit tests.
