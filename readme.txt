@@ -84,6 +84,8 @@ The connection to the SMTP server was successful, but the credentials you provid
     * Note compatibility through WP 4.7+.
     * Update copyright date (2017)
 * New: Add README.md
+* Change: Update unit test bootstrap
+    * Default `WP_TESTS_DIR` to `/tmp/wordpress-tests-lib` rather than erroring out if not defined via environment variable
 * Change: Add GitHub link to readme
 * Change: Note compatibility through WP 4.9+
 * Change: Drop compatibility with versions of WP older than 4.7
