@@ -81,6 +81,7 @@ The connection to the SMTP server was successful, but the credentials you provid
 = () =
 * Change: Note compatibility through WP 4.9+
 * Change: Drop compatibility with versions of WP older than 4.7
+* Change: Update copyright date (2018)
 
 = 3.2 (2016-11-14) =
 * New: Add unit tests.
