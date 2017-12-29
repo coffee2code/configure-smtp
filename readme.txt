@@ -32,7 +32,7 @@ Regardless of whether SMTP is enabled, the plugin provides you the ability to de
 
 A simple test button is also available that allows you to send a test email to yourself to check if sending email has been properly configured for your site.
 
-Links: [Plugin Homepage](http://coffee2code.com/wp-plugins/configure-smtp/) | [Plugin Directory Page](https://wordpress.org/plugins/configure-smtp/) | [Author Homepage](http://coffee2code.com)
+Links: [Plugin Homepage](http://coffee2code.com/wp-plugins/configure-smtp/) | [Plugin Directory Page](https://wordpress.org/plugins/configure-smtp/) | [GitHub](https://github.com/coffee2code/configure-smtp/) | [Author Homepage](http://coffee2code.com)
 
 
 == Installation ==
@@ -79,6 +79,7 @@ The connection to the SMTP server was successful, but the credentials you provid
 == Changelog ==
 
 = () =
+* Change: Add GitHub link to readme
 * Change: Note compatibility through WP 4.9+
 * Change: Drop compatibility with versions of WP older than 4.7
 * Change: Update copyright date (2018)
