@@ -82,7 +82,7 @@ final class c2c_ConfigureSMTP extends c2c_ConfigureSMTP_Plugin_046 {
 		'host'        => 'smtp.gmail.com',
 		'port'        => '465',
 		'smtp_auth'   => true,
-		'smtp_secure' => 'ssl'
+		'smtp_secure' => 'ssl',
 	);
 
 	/**
