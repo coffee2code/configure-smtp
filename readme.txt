@@ -84,6 +84,7 @@ The connection to the SMTP server was successful, but the credentials you provid
     * Note compatibility through WP 4.7+.
     * Update copyright date (2017)
 * New: Add README.md
+* Change: Switch to use of `wp_add_inline_script()` instead of `wp_localize_script()`
 * Change: Update unit test bootstrap
     * Default `WP_TESTS_DIR` to `/tmp/wordpress-tests-lib` rather than erroring out if not defined via environment variable
     * Enable more error output for unit tests
@@ -152,74 +153,7 @@ The connection to the SMTP server was successful, but the credentials you provid
 * Update copyright date (2011)
 * Add plugin homepage and author links in description in readme.txt
 
-= 3.0.1 =
-* Update plugin framework to 017 to use password input field instead of text field for SMTP password
-
-= 3.0 =
-* Re-implementation by extending C2C_Plugin_016, which among other things adds support for:
-    * Reset of options to default values
-    * Better sanitization of input values
-    * Offload of core/basic functionality to generic plugin framework
-    * Additional hooks for various stages/places of plugin operation
-    * Easier localization support
-* Add error checking and reporting when attempting to send test e-mail
-* Don't configure the mailer to use SMTP if no host is provided
-* Fix localization support
-* Store plugin instance in global variable, $c2c_configure_smtp, to allow for external manipulation
-* Rename class from 'ConfigureSMTP' to 'c2c_ConfigureSMTP'
-* Remove docs from top of plugin file (all that and more are in readme.txt)
-* Note compatibility with WP 3.0+
-* Minor tweaks to code formatting (spacing)
-* Add Upgrade Notice section to readme.txt
-* Add PHPDoc documentation
-* Add package info to top of file
-* Update copyright date
-* Remove trailing whitespace
-* Update screenshot
-* Update .pot file
-
-= 2.7 =
-* Fix to prevent HTML entities from appearing in the From name value in outgoing e-mails
-* Added full support for localization
-* Added .pot file
-* Noted that overriding the From e-mail value may not take effect depending on mail server and settings, particular if SMTPAuth is used (i.e. GMail)
-* Changed invocation of plugin's install function to action hooked in constructor rather than in global space
-* Update object's option buffer after saving changed submitted by user
-* Miscellaneous tweaks to update plugin to my current plugin conventions
-* Noted compatibility with WP2.9+
-* Dropped compatibility with versions of WP older than 2.8
-* Updated readme.txt
-* Updated copyright date
-
-= 2.6 =
-* Now show settings page JS in footer, and only on the admin settings page
-* Removed hardcoded path to plugins dir
-* Changed permission check
-* Minor reformatting (added spaces)
-* Tweaked readme.txt
-* Removed compatibility with versions of WP older than 2.6
-* Noted compatibility with WP 2.8+
-
-= 2.5 =
-* NEW
-* Added support for GMail, including configuring the various settings to be appropriate for GMail
-* Added support for SMTPSecure setting (acceptable values of '', 'ssl', or 'tls')
-* Added "Settings" link next to "Activate"/"Deactivate" link next to the plugin on the admin plugin listings page
-* CHANGED
-* Tweaked plugin's admin options page to conform to newer WP 2.7 style
-* Tweaked test e-mail subject and body
-* Removed the use_smtp option since WP uses SMTP by default, the plugin can't help you if it isn't using SMTP already, and the plugin should just go ahead and apply if it is active
-* Updated description, installation instructions, extended description, copyright
-* Extended compatibility to WP 2.7+
-* Facilitated translation of some text
-* FIXED
-* Fixed bug where specified wordwrap value wasn't taken into account
-
-= 2.0 =
-* Initial release after rewrite from wpPHPMailer
-
-= pre-2.0 =
-* Earlier versions of this plugin existed as my wpPHPMailer plugin, which due to the inclusion of PHPMailer within WordPress's core and necessary changes to the plugin warranted a rebranding/renaming.
+_Full changelog is available in [CHANGELOG.md](https://github.com/coffee2code/blog-time/blob/master/CHANGELOG.md)._
 
 
 == Upgrade Notice ==

@@ -11,7 +11,8 @@ A plugin for WordPress for configuring SMTP mailing in WordPress, including supp
 
 ## Additional Documentation
 
-See [readme.txt](https://github.com/coffee2code/configure-smtp/blob/master/readme.txt) for additional usage information.
+* See [readme.txt](https://github.com/coffee2code/configure-smtp/blob/master/readme.txt) for additional usage information.
+* See [CHANGELOG.md](CHANGELOG.md) for the list of changes for each release.
 
 
 ## Support
