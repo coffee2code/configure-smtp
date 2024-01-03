@@ -9,8 +9,8 @@
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: configure-smtp
  * Description: Configure SMTP mailing in WordPress, including support for sending email via SSL/TLS (such as Gmail).
- *
- * Compatible with WordPress 4.7+ through 4.9+.
+ *x
+ * Compatible with WordPress 4.9+ through 6.4+.
  *
  * =>> Read the accompanying readme.txt file for instructions and documentation.
  * =>> Also, visit the plugin's homepage for additional information and updates.
