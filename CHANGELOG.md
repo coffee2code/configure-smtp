@@ -7,6 +7,7 @@
     * Update copyright date (2017)
 * New: Add README.md
 * New: Add CHANGELOG.md file and move all but most recent changelog entries into it
+* New: Add `.gitignore` file
 * Change: Use `wp_add_inline_script()` instead of `wp_localize_script()`
 * Unit tests:
     * Fix: Allow tests to run against current versions of WordPress
