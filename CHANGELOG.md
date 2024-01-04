@@ -18,6 +18,7 @@
         * New: Create new subdirectory `tests/phpunit/` to house all files related to unit testing PHP
         * Change: Move `bin/` to `tests/bin/`
         * Change: Move `tests/` to `tests/phpunit/tests/`
+        * Change: Rename `phpunit.xml` to `phpunit.xml.dist` per best practices
     * Default `WP_TESTS_DIR` to `/tmp/wordpress-tests-lib` rather than erroring out if not defined via environment variable
     * Enable more error output for unit tests
 * Change: Update links to coffee2code.com to be HTTPS
