@@ -22,16 +22,6 @@
  */
 
 /*
- * TODO:
- * - Add ability to configure plugin via defines in wp-config.php. Include option to disable admin.
- *   However, if admin is being shown but user/pw is set in file, disable those inputs on the form.
- *   (Maybe show smtp username, but definitely don't show pw)
- * - Don't show or include SMTP pw on form. Leave blank to indicate previously entered pw should be used.
- *   (But UI should let user know whether it knows about a pw or not, and if so, that it doesn't need to
- *   be re-entered unless it is being changed)
- */
-
-/*
 	Copyright (c) 2004-2024 by Scott Reilly (aka coffee2code)
 
 	This program is free software; you can redistribute it and/or
