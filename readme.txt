@@ -78,21 +78,6 @@ The connection to the SMTP server was successful, but the credentials you provid
 
 == Changelog ==
 
-= () =
-* Change: Update plugin framework to 046
-    * Fix `reset_options()` to reference instance variable `$options`.
-    * Note compatibility through WP 4.7+.
-    * Update copyright date (2017)
-* New: Add README.md
-* Change: Switch to use of `wp_add_inline_script()` instead of `wp_localize_script()`
-* Change: Update unit test bootstrap
-    * Default `WP_TESTS_DIR` to `/tmp/wordpress-tests-lib` rather than erroring out if not defined via environment variable
-    * Enable more error output for unit tests
-* Change: Add GitHub link to readme
-* Change: Note compatibility through WP 4.9+
-* Change: Drop compatibility with versions of WP older than 4.7
-* Change: Update copyright date (2018)
-
 = 3.2 (2016-11-14) =
 * New: Add unit tests.
 * Change: Handle 'Send email via Gmail?' checkbox changes with JS event listener rather than explicit 'onclick'.
