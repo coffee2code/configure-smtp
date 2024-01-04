@@ -8,7 +8,16 @@
 * New: Add README.md
 * New: Add CHANGELOG.md file and move all but most recent changelog entries into it
 * Change: Use `wp_add_inline_script()` instead of `wp_localize_script()`
-* Change: Update unit test bootstrap
+* Unit tests:
+    * Fix: Allow tests to run against current versions of WordPress
+    * New: Add `composer.json` for PHPUnit Polyfill dependency
+    * Change: Prevent PHP warnings due to missing core-related generated files
+    * New: Add test to check that the appropriate number of framework strings are translatable
+    * Change: In bootstrap, add backcompat for PHPUnit pre-v6.0
+    * Change: Restructure unit test file structure
+        * New: Create new subdirectory `tests/phpunit/` to house all files related to unit testing PHP
+        * Change: Move `bin/` to `tests/bin/`
+        * Change: Move `tests/` to `tests/phpunit/tests/`
     * Default `WP_TESTS_DIR` to `/tmp/wordpress-tests-lib` rather than erroring out if not defined via environment variable
     * Enable more error output for unit tests
 * Change: Update links to coffee2code.com to be HTTPS
