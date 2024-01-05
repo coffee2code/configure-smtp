@@ -1,18 +1,18 @@
 <?php
 /**
- * @package C2C_Plugins
+ * @package C2C_Plugin
  * @author  Scott Reilly
- * @version 046
+ * @version 066
  */
 /*
 Basis for other plugins.
 
-Compatible with WordPress 3.6+ through 4.7+.
+Compatible with WordPress 4.9 through 6.4+.
 
 */
 
 /*
-	Copyright (c) 2010-2017 by Scott Reilly (aka coffee2code)
+	Copyright (c) 2010-2024 by Scott Reilly (aka coffee2code)
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -31,9 +31,73 @@ Compatible with WordPress 3.6+ through 4.7+.
 
 defined( 'ABSPATH' ) or die();
 
-if ( ! class_exists( 'c2c_ConfigureSMTP_Plugin_046' ) ) :
+if ( ! class_exists( 'c2c_Plugin_066' ) ) :
 
-abstract class c2c_ConfigureSMTP_Plugin_046 {
+abstract class c2c_Plugin_066 {
+
+	/** @var string The name of the option used to store plugin's settings. */
+	public $admin_options_name = '';
+
+	/** @var array Associative array of configuration settings for the plugin.  */
+	public $config = array();
+
+	/** @var bool Prevent overriding of the contextual help? */
+	public $disable_contextual_help = false;
+
+	/** @var bool Prevent WP from checking for updates to this plugin? */
+	public $disable_update_check = false;
+
+	/** @var string Prefix for all hooks. */
+	public $hook_prefix;
+
+	/** @var string Name assigned to the settings form. */
+	public $form_name;
+
+	/** @var string The name used for the plugin's settings page in the admin menu. */
+	public $menu_name;
+
+	/** @var string Full, localized version of the plugin name. */
+	public $name;
+
+	/** @var string Nonce field value use on the settings form. */
+	public $nonce_field;
+
+	/** @var string The core settings page under which the plugin settings page will be listed in the admin menu. */
+	public $settings_page;
+
+	/** @var bool Should settings page be shown? Only applies if admin is enabled. */
+	public $show_admin;
+
+	/** @var string Textdomain for localization. */
+	public $textdomain;
+
+	/** @var string Subdirectory, relative to plugin's root, to hold localization files. */
+	public $textdomain_subdir;
+
+	/** @var string Short (2-3 char) identifier for plugin author. */
+	public $author_prefix;
+
+	/** @var string A unique base ID for the plugin (generally a lower-case, dash-separated version of plugin name). */
+	public $id_base;
+
+	/** @var string The options page ID returned when the options page gets created. */
+	public $options_page;
+
+	/** @var string The path to the root of the plugin. */
+	public $plugin_basename;
+
+	/** @var string The path to the main plugin file. */
+	public $plugin_file;
+
+	/** @var string The URL to the main plugin file. */
+	public $plugin_path;
+
+	/** @var string The underscored version of $id_base. */
+	public $u_id_base;
+
+	/** @var string The current version of the plugin. */
+	public $version;
+
 	protected $plugin_css_version = '009';
 	protected $options            = array();
 	protected $options_from_db    = '';
@@ -45,15 +109,19 @@ abstract class c2c_ConfigureSMTP_Plugin_046 {
 		'datatype'         => '',
 		'default'          => '',
 		'help'             => '',
+		'inline_help'      => '',
 		'input'            => '',
 		'input_attributes' => '',
 		'label'            => '',
+		'more_help'        => '',
 		'no_wrap'          => false,
 		'numbered'         => false,
 		'options'          => '',
 		'output'           => '', // likely deprecated
+		'raw_help'         => '',
 		'required'         => false
 	);
+	protected $donation_url       = 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6ARCFJ9TX3522';
 	protected $saved_settings     = false;
 	protected $saved_settings_msg = '';
 
@@ -65,7 +133,7 @@ abstract class c2c_ConfigureSMTP_Plugin_046 {
 	 * @since 040
 	 */
 	public function c2c_plugin_version() {
-		return '046';
+		return '066';
 	}
 
 	/**
@@ -80,7 +148,7 @@ abstract class c2c_ConfigureSMTP_Plugin_046 {
 	protected function __construct( $version, $id_base, $author_prefix, $file, $plugin_options = array() ) {
 		$id_base = sanitize_title( $id_base );
 		if ( ! file_exists( $file ) ) {
-			die( sprintf( __( 'Invalid file specified for C2C_Plugin: %s', 'configure-smtp' ), $file ) );
+			die( sprintf( $this->get_c2c_string( 'Invalid file specified for C2C_Plugin: %s' ), $file ) );
 		}
 
 		$u_id_base = str_replace( '-', '_', $id_base );
@@ -120,27 +188,31 @@ abstract class c2c_ConfigureSMTP_Plugin_046 {
 		add_action( 'init',                         array( $this, 'init' ) );
 		add_action( 'activate_' . $plugin_file,     array( $this, 'install' ) );
 		add_action( 'deactivate_' . $plugin_file,   array( $this, 'deactivate' ) );
-		if ( $this->is_plugin_admin_page() || $this->is_submitting_form() ) {
-			add_action( 'admin_init', array( $this, 'init_options' ) );
-			if ( ! $this->is_submitting_form() ) {
-				add_action( 'admin_head', array( $this, 'add_c2c_admin_css' ) );
-			}
-		}
+		add_action( 'admin_init',                   array( $this, 'init_options' ) );
+		add_action( 'admin_head',                   array( $this, 'add_c2c_admin_css' ) );
 	}
 
 	/**
-	 * A dummy magic method to prevent object from being cloned
+	 * A dummy magic method to prevent object from being cloned.
 	 *
 	 * @since 036
+	 * @since 062 Throw error to actually prevent cloning.
 	 */
-	public function __clone() { _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'configure-smtp' ), '036' ); }
+	public function __clone() {
+		/* translators: %s: Name of plugin class. */
+		throw new Error( sprintf( $this->get_c2c_string( '%s cannot be cloned.' ), __CLASS__ ) );
+	}
 
 	/**
-	 * A dummy magic method to prevent object from being unserialized
+	 * A dummy magic method to prevent object from being unserialized.
 	 *
 	 * @since 036
+	 * @since 062 Throw error to actually prevent unserialization.
 	 */
-	public function __wakeup() { _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'configure-smtp' ), '036' ); }
+	public function __wakeup() {
+		/* translators: %s: Name of plugin class. */
+		throw new Error( sprintf( $this->get_c2c_string( '%s cannot be unserialized.' ), __CLASS__ ) );
+	}
 
 	/**
 	 * Returns the plugin's version.
@@ -152,13 +224,11 @@ abstract class c2c_ConfigureSMTP_Plugin_046 {
 	}
 
 	/**
-	 * Handles installation tasks, such as ensuring plugin options are instantiated and saved to options table.
+	 * Handles installation tasks.
 	 *
 	 * This can be overridden.
 	 */
 	public function install() {
-		$this->options = $this->get_options();
-		update_option( $this->admin_options_name, $this->options );
 	}
 
 	/**
@@ -188,19 +258,35 @@ abstract class c2c_ConfigureSMTP_Plugin_046 {
 			add_filter( 'http_request_args', array( $this, 'disable_update_check' ), 5, 2 );
 		}
 
-		if ( $this->show_admin && $this->settings_page && ! empty( $this->config ) && current_user_can( 'manage_options' ) ) {
+		if ( $this->show_admin && $this->settings_page && ! empty( $this->config ) && current_user_can( $this->get_manage_options_capability() ) ) {
 			add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 			if ( ! $this->disable_contextual_help ) {
 				if ( version_compare( $GLOBALS['wp_version'], '3.3', '<' ) ) {
 					add_filter( 'contextual_help', array( $this, 'contextual_help' ), 10, 3 );
 				}
-				if ( $this->is_plugin_admin_page() ) {
-					add_thickbox();
-				}
+				add_action( 'admin_enqueue_scripts', 'add_thickbox' );
 			}
 		}
 
 		$this->register_filters();
+	}
+
+	/**
+	 * Determines if the running WordPress is relative to a given version.
+	 *
+	 * @since 052
+	 *
+	 * @param string $wp_ver   A version string to compare the current WP
+	 *                         version against.
+	 * @param string $operator Optional. A comparison operator compatible with
+	 *                         PHP's `version_compare()`. Default '>='.
+	 * @return bool True if provided version is relative to the current version
+	 *              of WordPress according to comparison operation, else false.
+	 */
+	public function is_wp_version_cmp( $wp_ver, $operator = '>=' ) {
+		$operator = $operator ?: '>=';
+
+		return version_compare( $GLOBALS['wp_version'], $wp_ver, $operator );
 	}
 
 	/**
@@ -283,28 +369,64 @@ abstract class c2c_ConfigureSMTP_Plugin_046 {
 	}
 
 	/**
+	 * Returns the capability needed to configure the plugin via its settings page.
+	 *
+	 * Note: This does not actually check if the plugin has a settings page, only
+	 * what the capability is that would be needed to use it if it was enabled.
+	 *
+	 * @since 066
+	 *
+	 * @return string The capability. Default 'manage_options'.
+	 */
+	public function get_manage_options_capability() {
+		$default_cap = 'manage_options';
+		/**
+		 * Filters the capability needed to configure the plugin via its settings page.
+		 *
+		 * @since 066
+		 *
+		 * @param string $capability The capability. Default 'manage_options'.
+		 */
+		$cap = apply_filters( $this->get_hook( 'manage_options_capability' ), $default_cap );
+		if ( ! $cap || ! is_string( $cap ) ) {
+			$cap = $default_cap;
+		}
+
+		return $cap;
+	}
+
+	/**
 	 * Initializes options.
 	 */
 	public function init_options() {
 		register_setting( $this->admin_options_name, $this->admin_options_name, array( $this, 'sanitize_inputs' ) );
+
 		add_settings_section( 'default', '', array( $this, 'options_page_description' ), $this->plugin_file );
-		add_filter( 'whitelist_options', array( $this, 'whitelist_options' ) );
+
+		add_filter(
+			$this->is_wp_version_cmp( '5.5' ) ? 'allowed_options' : 'whitelist_options',
+			array( $this, 'allowed_options' )
+		);
+
 		foreach ( $this->get_option_names( false ) as $opt ) {
-			add_settings_field( $opt, $this->get_option_label( $opt ), array( $this, 'display_option' ), $this->plugin_file, 'default', $opt );
+			add_settings_field( $opt, $this->get_option_label( $opt ), array( $this, 'display_option' ), $this->plugin_file, 'default', array( 'label_for' => $opt ) );
 		}
 	}
 
 	/**
-	 * Whitelist the plugin's option(s)
+	 * Allows the plugin's option(s)
 	 *
-	 * @param array $options Array of options.
+	 * @since 052 Renamed from `whitelist_options()`.
 	 *
-	 * @return array The whitelist-amended $options array.
+	 * @param array $options Array of allowed options.
+	 * @return array The amended allowed options array.
 	 */
-	public function whitelist_options( $options ) {
+	public function allowed_options( $options ) {
 		$added = array( $this->admin_options_name => array( $this->admin_options_name ) );
-		$options = add_option_whitelist( $added, $options );
-		return $options;
+
+		return function_exists( 'add_allowed_options' )
+			? add_allowed_options( $added, $options )
+			: add_option_whitelist( $added, $options );
 	}
 
 	/**
@@ -326,7 +448,7 @@ abstract class c2c_ConfigureSMTP_Plugin_046 {
 			echo '<h1>' . $localized_heading_text . "</h1>\n";
 		}
 		if ( ! $this->disable_contextual_help ) {
-			echo '<p class="see-help">' . __( 'See the "Help" link to the top-right of the page for more help.', 'configure-smtp' ) . "</p>\n";
+			echo '<p class="see-help">' . $this->get_c2c_string( 'See the "Help" link to the top-right of the page for more help.' ) . "</p>\n";
 		}
 	}
 
@@ -353,14 +475,8 @@ abstract class c2c_ConfigureSMTP_Plugin_046 {
 	public function reset_options() {
 		$this->reset_caches();
 
-		// If a setting has been saved to the database.
-		if ( $option = get_option( $this->admin_options_name ) ) {
-			// Unset the options (so that in get_options() the defaults are used).
-			foreach ( $this->get_option_names() as $opt ) {
-				unset( $this->options[ $opt ] );
-			}
-			update_option( $this->admin_options_name, $this->options );
-		}
+		// Delete the setting from the database.
+		delete_option( $this->admin_options_name );
 
 		$this->options = $this->get_options( false );
 
@@ -385,7 +501,8 @@ abstract class c2c_ConfigureSMTP_Plugin_046 {
 		do_action( $this->get_hook( 'before_save_options' ), $this );
 		if ( isset( $_POST['Reset'] ) ) {
 			$options = $this->reset_options();
-			add_settings_error( 'general', 'settings_reset', __( 'Settings reset.', 'configure-smtp' ), 'updated' );
+			add_settings_error( 'general', 'settings_reset', $this->get_c2c_string( 'Settings reset.' ), 'updated' );
+			unset( $_POST['Reset'] );
 		} else {
 			// Start with the existing options, then start overwriting their potential override value. (This prevents
 			// unscrupulous addition of fields by the user)
@@ -397,7 +514,7 @@ abstract class c2c_ConfigureSMTP_Plugin_046 {
 					if ( $this->config[ $opt ]['input'] == 'checkbox' ) {
 						$options[ $opt ] = '';
 					} elseif ( true === $this->config[ $opt ]['required'] ) {
-						$msg = sprintf( __( 'A value is required for: "%s"', 'configure-smtp' ), $this->config[ $opt ]['label'] );
+						$msg = sprintf( $this->get_c2c_string( 'A value is required for: "%s"' ), $this->config[ $opt ]['label'] );
 						add_settings_error( 'general', 'setting_required', $msg, 'error' );
 					}
 				}
@@ -405,7 +522,7 @@ abstract class c2c_ConfigureSMTP_Plugin_046 {
 					$val = $inputs[ $opt ];
 					$error = false;
 					if ( empty( $val ) && ( true === $this->config[ $opt ]['required'] ) ) {
-						$msg = sprintf( __( 'A value is required for: "%s"', 'configure-smtp' ), $this->config[ $opt ]['label'] );
+						$msg = sprintf( $this->get_c2c_string( 'A value is required for: "%s"' ), $this->config[ $opt ]['label'] );
 						$error = true;
 					} else {
 						$input = $this->config[ $opt ]['input'];
@@ -413,8 +530,12 @@ abstract class c2c_ConfigureSMTP_Plugin_046 {
 							case 'checkbox':
 								break;
 							case 'int':
+								if ( $val && is_string( $val ) ) {
+									$val = str_replace( ',', '', $val );
+								}
 								if ( ! empty( $val ) && ( ! is_numeric( $val ) || ( intval( $val ) != round( $val ) ) ) ) {
-									$msg = sprintf( __( 'Expected integer value for: %s', 'configure-smtp' ), $this->config[ $opt ]['label'] );
+									/* translators: %s: Label for setting. */
+									$msg = sprintf( $this->get_c2c_string( 'Expected integer value for: %s' ), $this->config[ $opt ]['label'] );
 									$error = true;
 									$val = '';
 								}
@@ -430,7 +551,7 @@ abstract class c2c_ConfigureSMTP_Plugin_046 {
 									$val = array_map( 'trim', explode( "\n", trim( $val ) ) );
 								break;
 							case 'hash':
-								if ( ! empty( $val ) && $input != 'select' && !is_array( $val ) ) {
+								if ( 'select' !== $input && ! is_array( $val ) && '' !== $val ) {
 									$new_values = array();
 									foreach ( explode( "\n", $val ) AS $line ) {
 										// TODO: It's possible to allow multi-line replacement text, in which case
@@ -439,9 +560,9 @@ abstract class c2c_ConfigureSMTP_Plugin_046 {
 										if ( false === strpos( $line, '=>' ) ) {
 											continue;
 										}
-										list( $shortcut, $text ) = array_map( 'trim', explode( "=>", $line, 2 ) );
-										if ( $shortcut && $text ) {
-											$new_values[str_replace( '\\', '', $shortcut )] = str_replace( '\\', '', $text );
+										list( $shortcut, $text ) = array_map( 'trim', explode( '=>', $line, 2 ) );
+										if ( $shortcut && '' !== $text ) {
+											$new_values[ str_replace( '\\', '', $shortcut ) ] = str_replace( '\\', '', $text );
 										}
 									}
 									$val = $new_values;
@@ -465,6 +586,15 @@ abstract class c2c_ConfigureSMTP_Plugin_046 {
 	 * Initializes the plugin's configuration and localizable text variables.
 	 */
 	abstract protected function load_config();
+
+	/**
+	 * Returns translated strings used by c2c_Plugin parent class.
+	 *
+	 * @since 060
+	 *
+	 * @return string[]
+	 */
+	abstract public function get_c2c_string( $string );
 
 	/**
 	 * Adds a new option to the plugin's configuration.
@@ -497,7 +627,7 @@ abstract class c2c_ConfigureSMTP_Plugin_046 {
 		// Ensure required configuration options have been configured via the sub-class. Die if any aren't.
 		foreach ( $this->required_config as $config ) {
 			if ( empty( $this->$config ) ) {
-				die( sprintf( __( "The plugin configuration option '%s' must be supplied.", 'configure-smtp' ), $config ) );
+				die( sprintf( $this->get_c2c_string( "The plugin configuration option '%s' must be supplied." ), $config ) );
 			}
 		}
 
@@ -542,7 +672,7 @@ abstract class c2c_ConfigureSMTP_Plugin_046 {
 	 * Loads the localization textdomain for the plugin.
 	 */
 	protected function load_textdomain() {
-		load_plugin_textdomain( 'configure-smtp' );
+		load_plugin_textdomain( $this->id_base );
 	}
 
 	/**
@@ -555,30 +685,34 @@ abstract class c2c_ConfigureSMTP_Plugin_046 {
 	}
 
 	/**
-	 * Outputs simple contextual help text, comprising solely of a thickboxed link
-	 * to the plugin's hosted readme.txt file.
+	 * Returns markup for simple contextual help text, comprising solely of a
+	 * thickboxed link to the plugin's hosted readme.txt file.
 	 *
-	 * NOTE: If overriding this in a sub-class, before sure to include the
-	 * check at the beginning of the function to ensure it shows up on its
-	 * own settings admin page.
+	 * NOTE: If overriding this in a sub-class, be sure to include the check at
+	 * the beginning of the function to ensure it shows up on its own settings
+	 * admin page.
 	 *
 	 * @param string $contextual_help The default contextual help.
 	 * @param int    $screen_id       The screen ID.
 	 * @param object $screen          The screen object (only supplied in WP 3.0).
+	 * @return string
 	 */
 	public function contextual_help( $contextual_help, $screen_id, $screen = null ) {
 		if ( $screen_id != $this->options_page ) {
 			return $contextual_help;
 		}
 
-		$help_url = admin_url( "plugin-install.php?tab=plugin-information&amp;plugin={$this->id_base}&amp;TB_iframe=true&amp;width=640&amp;height=514" );
-
-		$help = '<h3>' . __( 'More Plugin Help', 'configure-smtp' ) . '</h3>';
+		$help = '<h3>' . $this->get_c2c_string( 'More Plugin Help' ) . '</h3>';
 		$help .= '<p class="more-help">';
-		$help .= '<a title="' . esc_attr( sprintf( __( 'More information about %1$s %2$s', 'configure-smtp' ), $this->name, $this->version ) ) .
-			'" class="thickbox" href="' . $help_url . '">' . __( 'Click for more help on this plugin', 'configure-smtp' ) . '</a>' .
-			__( ' (especially check out the "Other Notes" tab, if present)', 'configure-smtp' );
+		$help .= sprintf(
+			'<a title="%s" class="thickbox" href="%s">%s</a>%s',
+			esc_attr( sprintf( $this->get_c2c_string( 'More information about %1$s %2$s' ), $this->name, $this->version ) ),
+			esc_url( admin_url( "plugin-install.php?tab=plugin-information&amp;plugin={$this->id_base}&amp;TB_iframe=true&amp;width=640&amp;height=514" ) ),
+			$this->get_c2c_string( 'Click for more help on this plugin' ),
+			$this->get_c2c_string( ' (especially check out the "Other Notes" tab, if present)' )
+		);
 		$help .= ".</p>\n";
+
 		return $help;
 	}
 
@@ -591,20 +725,24 @@ abstract class c2c_ConfigureSMTP_Plugin_046 {
 			return;
 		}
 
+		if ( ! $this->is_plugin_admin_page() ) {
+			return;
+		}
+
 		$c2c_plugin_css_was_output = true;
 		$logo = plugins_url( 'c2c_minilogo.png', $this->plugin_file );
 		/**
 		 * Remember to increment the plugin_css_version variable if changing the CSS
 		 */
 		echo <<<HTML
-		<style type="text/css">
+		<style>
 		.long-text {width:98% !important;}
 		#c2c {
 			text-align:center;
-			color:#888;
+			color:#777;
 			background-color:#ffffef;
-			padding:5px 0 0;
-			margin-top:12px;
+			padding:1rem 0;
+			margin-top:4rem;
 			border-style:solid;
 			border-color:#dadada;
 			border-width:1px 0;
@@ -615,11 +753,13 @@ abstract class c2c_ConfigureSMTP_Plugin_046 {
 			padding:5px 40px 0 0;
 			width:45%;
 			min-height:40px;
-			background:url('$logo') no-repeat top right;
+			background:url('$logo') no-repeat center right;
+			font-size:larger;
 		}
 		#c2c span {
 			display:block;
-			font-size:x-small;
+			font-size:smaller;
+			margin-top:0.5rem;
 		}
 		.form-table {margin-bottom:20px;}
 		.c2c-plugin-list {margin-left:2em;}
@@ -627,9 +767,15 @@ abstract class c2c_ConfigureSMTP_Plugin_046 {
 		.wrap {margin-bottom:30px !important;}
 		.c2c-form .hr, .c2c-hr {border-bottom:1px solid #ccc;padding:0 2px;margin-bottom:6px;}
 		.c2c-fieldset {border:1px solid #ccc; padding:2px 8px;}
-		.c2c-textarea, .c2c-inline_textarea {width:98%;font-family:"Courier New", Courier, mono;}
+		.c2c-textarea, .c2c-inline_textarea {width:98%;font-family:"Courier New", Courier, mono; display: block; white-space: pre; word-wrap: normal; overflow-x: scroll;}
 		.see-help {font-size:x-small;font-style:italic;}
+		.inline-description {display:inline-block;}
 		.more-help {display:block;margin-top:8px;}
+		.wrap .c2c-notice-inline {margin-bottom:0;margin-top:1rem;width:fit-content;}
+		input:disabled.c2c-short_text, input:disabled.c2c-long_text, input:disabled.c2c-text {border: 2px solid #ddd;box-shadow: none;}
+		ul.description, ol.description {color:#646970;margin:10px 0;list-style:disc;}
+		ul.description li, ol.description li {margin-left:1rem;}
+		ul.description ul, ul.description ol, ol.description ul, ol.description ol {list-style:circle;margin-top:0.4rem;}
 		</style>
 
 HTML;
@@ -652,7 +798,7 @@ HTML;
 		}
 		$menu_func = 'add_' . $func_root . '_page';
 		if ( function_exists( $menu_func ) ) {
-			$this->options_page = call_user_func( $menu_func, $this->name, $this->menu_name, 'manage_options', $this->plugin_basename, array( $this, 'options_page' ) );
+			$this->options_page = call_user_func( $menu_func, $this->name, $this->menu_name, $this->get_manage_options_capability(), $this->plugin_basename, array( $this, 'options_page' ) );
 			add_action( 'load-' . $this->options_page, array( $this, 'help_tabs' ) );
 		}
 	}
@@ -667,13 +813,11 @@ HTML;
 			return;
 		}
 
-		$screen = get_current_screen();
-
-		if ( $screen->id != $this->options_page ) {
+		if ( ! $this->is_plugin_admin_page() ) {
 			return;
 		}
 
-		$this->help_tabs_content( $screen );
+		$this->help_tabs_content( get_current_screen() );
 	}
 
 	/**
@@ -686,7 +830,7 @@ HTML;
 	public function help_tabs_content( $screen ) {
 		$screen->add_help_tab( array(
 			'id'      => 'c2c-more-help-' . $this->id_base,
-			'title'   => __( 'More Help', 'configure-smtp' ),
+			'title'   => $this->get_c2c_string( 'More Help' ),
 			'content' => self::contextual_help( '', $this->options_page )
 		) );
 	}
@@ -699,7 +843,7 @@ HTML;
 	 * @return array Links associated with a plugin on the admin Plugins page
 	 */
 	public function plugin_action_links( $action_links ) {
-		$settings_link = '<a href="' . $this->settings_page . '.php?page='.$this->plugin_basename.'">' . __( 'Settings', 'configure-smtp' ) . '</a>';
+		$settings_link = '<a href="' . $this->settings_page . '.php?page='.$this->plugin_basename.'">' . $this->get_c2c_string( 'Settings' ) . '</a>';
 		array_unshift( $action_links, $settings_link );
 		return $action_links;
 	}
@@ -709,10 +853,8 @@ HTML;
 	 */
 	public function donate_link( $links, $file ) {
 		if ( $file == $this->plugin_basename ) {
-			$donation_url  = 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6ARCFJ9TX3522';
-			$donation_url .= urlencode( sprintf( __( 'Donation for coffee2code plugin: %s', 'configure-smtp' ), $this->name ) );
-			$title         = __( 'Coffee fuels my coding.', 'configure-smtp' );
-			$links[] = '<a href="' . esc_url( $donation_url ) . '" title="' . esc_attr( $title ) . '">' . __( 'Donate', 'configure-smtp' ) . '</a>';
+			$title         = $this->get_c2c_string( 'Coffee fuels my coding.' );
+			$links[] = '<a href="' . esc_url( $this->donation_url ) . '" title="' . esc_attr( $title ) . '">' . $this->get_c2c_string( 'Donate' ) . '</a>';
 		}
 		return $links;
 	}
@@ -866,10 +1008,33 @@ HTML;
 	/**
 	 * Checks if the current page is the plugin's settings page.
 	 *
+	 * Note: This should not be used during or before `'admin_init'` since the
+	 * current screen won't be set yet.
+	 *
 	 * @return bool True if on the plugin's settings page, else false.
 	 */
 	protected function is_plugin_admin_page() {
-		return ( basename( $_SERVER['PHP_SELF'], '.php' ) == $this->settings_page && isset( $_REQUEST['page'] ) && $_REQUEST['page'] == $this->plugin_basename );
+		if ( ! is_admin() ) {
+			return false;
+		}
+
+		if ( ! did_action( 'admin_init' ) ) {
+			_doing_it_wrong(
+				__METHOD__,
+				sprintf( $this->get_c2c_string( 'The method %1$s should not be called until after the %2$s action.' ), 'is_plugin_admin_page()', 'admin_init' ),
+				'063'
+			);
+		}
+
+		$current_screen = get_current_screen();
+
+		return (
+			$current_screen
+		&&
+			$this->options_page
+		&&
+			$current_screen->id === $this->options_page
+		);
 	}
 
 	/**
@@ -878,6 +1043,8 @@ HTML;
 	 * @param string $opt The name/key of the option.
 	 */
 	public function display_option( $opt ) {
+		$opt = ! empty( $opt['label_for'] ) ? $opt['label_for'] : $opt;
+
 		do_action( $this->get_hook( 'pre_display_option' ), $opt );
 
 		$options = $this->get_options();
@@ -917,6 +1084,8 @@ HTML;
 				}
 				$value = $new_value;
 			}
+		} elseif ( $datatype === 'int' && is_numeric( $value ) ) {
+			$value = number_format_i18n( $value );
 		}
 		$attributes = $this->config[ $opt ]['input_attributes'];
 		$this->config[ $opt ]['class'][] = 'c2c-' . $input;
@@ -929,6 +1098,9 @@ HTML;
 				$this->config[ $opt ]['class'][] = ' long-text';
 			}
 			$input = 'text';
+		}
+		elseif ( 'number' === $input ) {
+			$this->config[ $opt ]['class'][] = 'small-text';
 		}
 		$class = implode( ' ', $this->config[ $opt ]['class'] );
 		$attribs = "name='{$popt}' id='{$opt}' class='{$class}' {$attributes}";
@@ -963,11 +1135,28 @@ HTML;
 			echo '</fieldset>';
 		} elseif ( $input == 'checkbox' ) {
 			echo "<input type='{$input}' {$attribs} value='1' " . checked( $value, 1, false ) . " />\n";
+			if ( ! empty( $this->config[ $opt ]['help'] ) ) {
+				printf( "<label class='description' for='%s'>%s</label>\n", $opt, $this->config[ $opt ]['help'] );
+				$this->config[ $opt ]['help'] = '';
+			}
 		} else { // Only 'text' and 'password' should fall through to here.
 			echo "<input type='{$input}' {$attribs} value='" . esc_attr( $value ) . "' />\n";
 		}
-		if ( $help = apply_filters( $this->get_hook( 'option_help'), $this->config[ $opt ]['help'], $opt ) ) {
+		// Help intended to be inline (usually with a text field; checkboxes naturally have their help inline)
+		if ( $help = apply_filters( $this->get_hook( 'option_help'), $this->config[ $opt ]['inline_help'], $opt, 'inline_help' ) ) {
+			echo "<p class='description inline-description'>{$help}</p>\n";
+		}
+		// Help intended to be shown below an input field.
+		if ( $help = apply_filters( $this->get_hook( 'option_help'), $this->config[ $opt ]['help'], $opt, 'help' ) ) {
 			echo "<p class='description'>{$help}</p>\n";
+		}
+		// Additional paragraph of help intended to follow the main 'help'.
+		if ( $help = apply_filters( $this->get_hook( 'option_help'), $this->config[ $opt ]['more_help'], $opt, 'more_help' ) ) {
+			echo "<p class='description'>{$help}</p>\n";
+		}
+		// Additional help of custom markup (block elements that wouldn't fit into the default help paragraph markup).
+		if ( $help = apply_filters( $this->get_hook( 'option_help'), $this->config[ $opt ]['raw_help'], $opt, 'raw_help' ) ) {
+			echo $help . "\n";
 		}
 
 		do_action( $this->get_hook( 'post_display_option' ), $opt );
@@ -984,31 +1173,39 @@ HTML;
 			echo "<div id='message' class='updated fade'><p><strong>" . $this->saved_settings_msg . '</strong></p></div>';
 		}
 
-		$logo = plugins_url( 'c2c_minilogo.png', $this->plugin_file );
-
 		echo "<div class='wrap'>\n";
 
 		do_action( $this->get_hook( 'before_settings_form' ), $this );
 
-		echo "<form action='" . admin_url( 'options.php' ) . "' method='post' class='c2c-form'>\n";
+		printf(
+			'<form action="%s" method="post" id="%s" class="c2c-form">' . "\n",
+			esc_url( admin_url( 'options.php' ) ),
+			esc_attr( 'settings-' . $this->id_base )
+		);
 
 		settings_fields( $this->admin_options_name );
 		do_settings_sections( $this->plugin_file );
 
-		echo '<input type="submit" name="Submit" class="button-primary" value="' . esc_attr__( 'Save Changes', 'configure-smtp' ) . '" />' . "\n";
-		echo '<input type="submit" name="Reset" class="button" value="' . esc_attr__( 'Reset Settings', 'configure-smtp' ) . '" />' . "\n";
+		echo '<input type="submit" name="Submit" class="button-primary" value="' . esc_attr( $this->get_c2c_string( 'Save Changes' ) ) . '" />' . "\n";
+		echo '<input type="submit" name="Reset" class="button" value="' . esc_attr( $this->get_c2c_string( 'Reset Settings' ) ) . '" />' . "\n";
 		echo '</form>' . "\n";
 
 		do_action( $this->get_hook( 'after_settings_form' ), $this );
 
 		echo '<div id="c2c" class="wrap"><div>' . "\n";
-		$c2c = '<a href="https://coffee2code.com" title="coffee2code.com">' . __( 'Scott Reilly, aka coffee2code', 'configure-smtp' ) . '</a>';
-		echo sprintf( __( 'This plugin brought to you by %s.', 'configure-smtp' ), $c2c );
-		echo '<span><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6ARCFJ9TX3522" title="' . esc_attr__( 'Please consider a donation', 'configure-smtp' ) . '">' .
-		__( 'Did you find this plugin useful?', 'configure-smtp' ) . '</a></span>';
-		echo '</div>' . "\n";
+		printf(
+			$this->get_c2c_string( 'This plugin brought to you by %s.' ),
+			'<a href="https://coffee2code.com" title="' . esc_attr( $this->get_c2c_string( 'The plugin author homepage.' ) ) . '">Scott Reilly (coffee2code)</a>'
+		);
+		printf(
+			'<span><a href="%1$s" title="%2$s">%3$s</span>',
+			esc_url( $this->donation_url ),
+			esc_attr( $this->get_c2c_string( "Thanks for the consideration; it's much appreciated." ) ),
+			$this->get_c2c_string( 'If this plugin has been useful to you, please consider a donation.' )
+		);
+		echo "</div>\n";
 
-		echo '</div>' . "\n";
+		echo "</div>\n";
 	}
 
 	/**
@@ -1018,7 +1215,7 @@ HTML;
 	 *
 	 * @return string The plugin-specific version of the hook name.
 	 */
-	protected function get_hook( $hook ) {
+	public function get_hook( $hook ) {
 		return $this->hook_prefix . '_' . $hook;
 	}
 
@@ -1030,7 +1227,7 @@ HTML;
 	 * @return string The URL
 	 */
 	public function readme_url() {
-		return 'https://wordpress.org/plugins/' . $this->id_base . '/tags/' . $this->version . '/readme.txt';
+		return 'https://plugins.svn.wordpress.org/' . $this->id_base . '/tags/' . $this->version . '/readme.txt';
 	}
 } // end class
 

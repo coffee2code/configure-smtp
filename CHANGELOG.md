@@ -1,10 +1,7 @@
 # Changelog
 
 ## _(in-progress)_
-* Change: Update plugin framework to 046
-    * Fix `reset_options()` to reference instance variable `$options`.
-    * Note compatibility through WP 4.7+.
-    * Update copyright date (2017)
+* Change: Update plugin framework to 066
 * New: Add README.md
 * New: Add CHANGELOG.md file and move all but most recent changelog entries into it
 * New: Add TODO.md file and move existing TODO list from top of main plugin file into it
