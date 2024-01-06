@@ -255,6 +255,7 @@ final class c2c_ConfigureSMTP extends c2c_Plugin_066 {
 			'Donate'
 				=> __( 'Donate', 'configure-smtp' ),
 			'Expected integer value for: %s'
+				/* translators: %s: Label for setting. */
 				=> __( 'Expected integer value for: %s', 'configure-smtp' ),
 			'Invalid file specified for C2C_Plugin: %s'
 				/* translators: %s: Path to the plugin file. */
@@ -317,6 +318,7 @@ final class c2c_ConfigureSMTP extends c2c_Plugin_066 {
 		if ( empty( $options['host'] ) ) {
 			echo '<div class="error"><p>' . __( 'SMTP mailing is currently <strong>NOT ENABLED</strong> because no SMTP host has been specified.' ) . '</p></div>';
 		}
+		/* translators: %s: Link to the test tool section of the page. */
 		echo '<p>' . sprintf( __( 'After you have configured your SMTP settings, use the %s to send a test message to yourself.', 'configure-smtp' ), $str ) . '</p>';
 	}
 
@@ -373,8 +375,10 @@ final class c2c_ConfigureSMTP extends c2c_Plugin_066 {
 			$email     = $user->user_email;
 			$timestamp = current_time( 'mysql' );
 
+			/* translators: %s: Name of the plugin. */
 			$message = sprintf( __( 'Hi, this is the %s plugin emailing you a test message from your WordPress blog.', 'configure-smtp' ), $this->name );
 			$message .= "\n\n";
+			/* translators: %s: A timestamp. */
 			$message .= sprintf( __( 'This message was sent with this time-stamp: %s', 'configure-smtp' ), $timestamp );
 			$message .= "\n\n";
 			$message .= __( 'Congratulations!  Your blog is properly configured to send email.', 'configure-smtp' );
@@ -392,6 +396,7 @@ final class c2c_ConfigureSMTP extends c2c_Plugin_066 {
 				$this->error_msg .= '</div>';
 			} else {
 				$this->error_msg  = '<div class="updated"><p>' . __( 'Test email sent.', 'configure-smtp' ) . '</p>';
+				/* translators: %s: A timestamp. */
 				$this->error_msg .= '<p>' . sprintf( __( 'The body of the email includes this time-stamp: %s.', 'configure-smtp' ), $timestamp ) . '</p></div>';
 			}
 		}
@@ -407,6 +412,7 @@ final class c2c_ConfigureSMTP extends c2c_Plugin_066 {
 
 		echo '<div class="wrap"><h2><a name="test"></a>' . __( 'Send A Test', 'configure-smtp' ) . "</h2>\n";
 		echo '<p>' . __( 'Click the button below to send a test email to yourself to see if things are working. Be sure to save any changes you made to the form above before sending the test email. Bear in mind it may take a few minutes for the email to wind its way through the internet.', 'configure-smtp' ) . "</p>\n";
+		/* translators: %s: An email address. */
 		echo '<p>' . sprintf( __( 'This email will be sent to your email address, %s.', 'configure-smtp' ), $email ) . "</p>\n";
 		echo '<p><em>You must save any changes to the form above before attempting to send a test email.</em></p>';
 		echo "<form name='configure_smtp' action='$action_url' method='post'>\n";

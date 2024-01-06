@@ -3,6 +3,7 @@
 ## _(in-progress)_
 * Change: Update plugin framework to 066
 * Change: Initialize plugin on `plugins_loaded` action instead of on load
+* Change: Add translator comments for all strings with placeholders
 * New: Add README.md
 * New: Add CHANGELOG.md file and move all but most recent changelog entries into it
 * New: Add TODO.md file and move existing TODO list from top of main plugin file into it
