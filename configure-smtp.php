@@ -91,6 +91,8 @@ final class c2c_ConfigureSMTP extends c2c_Plugin_066 {
 	public static function get_instance() {
 		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self();
+			// Note: Support for the global is deprecated and will be removed.
+			$GLOBALS['c2c_configure_smtp'] = self::$instance;
 		}
 
 		return self::$instance;
@@ -480,7 +482,6 @@ final class c2c_ConfigureSMTP extends c2c_Plugin_066 {
 
 } // end c2c_ConfigureSMTP
 
-// Note: Support for the global is deprecated and will be removed.
-$GLOBALS['c2c_configure_smtp'] = c2c_ConfigureSMTP::get_instance();
+add_action( 'plugins_loaded', array( 'c2c_ConfigureSMTP', 'get_instance' ) );
 
 endif; // end if !class_exists()

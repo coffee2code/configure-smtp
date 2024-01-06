@@ -89,6 +89,10 @@ class Configure_SMTP_Test extends WP_UnitTestCase {
 		$this->assertTrue( is_a( c2c_ConfigureSMTP::get_instance(), 'c2c_Plugin_066' ) );
 	}
 
+	public function test_hooks_plugins_loaded() {
+		$this->assertEquals( 10, has_action( 'plugins_loaded', array( 'c2c_ConfigureSMTP', 'get_instance' ) ) );
+	}
+
 	/**
 	 * @dataProvider get_settings_with_defaults
 	 */
