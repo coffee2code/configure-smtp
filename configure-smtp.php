@@ -311,15 +311,15 @@ final class c2c_ConfigureSMTP extends c2c_Plugin_066 {
 		parent::options_page_description( __( 'Configure SMTP Settings', 'configure-smtp' ) );
 
 		if ( ! empty( $this->error_msg ) ) {
-			echo $this->error_msg;
+			echo wp_kses_post( $this->error_msg );
 		}
 
 		$str = '<a href="#test">' . __( 'test', 'configure-smtp' ) . '</a>';
 		if ( empty( $options['host'] ) ) {
-			echo '<div class="error"><p>' . __( 'SMTP mailing is currently <strong>NOT ENABLED</strong> because no SMTP host has been specified.' ) . '</p></div>';
+			echo '<div class="error"><p>' . wp_kses_data( __( 'SMTP mailing is currently <strong>NOT ENABLED</strong> because no SMTP host has been specified.' ) ) . '</p></div>';
 		}
 		/* translators: %s: Link to the test tool section of the page. */
-		echo '<p>' . sprintf( __( 'After you have configured your SMTP settings, use the %s to send a test message to yourself.', 'configure-smtp' ), $str ) . '</p>';
+		echo '<p>' . wp_kses_data( sprintf( __( 'After you have configured your SMTP settings, use the %s to send a test message to yourself.', 'configure-smtp' ), $str ) ) . '</p>';
 	}
 
 	/**
@@ -389,15 +389,15 @@ final class c2c_ConfigureSMTP extends c2c_Plugin_066 {
 			global $phpmailer;
 
 			if ( $phpmailer->ErrorInfo != "" ) {
-				$this->error_msg  = '<div class="error"><p>' . __( 'An error was encountered while trying to send the test email.', 'configure-smtp' ) . '</p>';
+				$this->error_msg  = '<div class="error"><p>' . esc_html__( 'An error was encountered while trying to send the test email.', 'configure-smtp' ) . '</p>';
 				$this->error_msg .= '<blockquote style="font-weight:bold;">';
-				$this->error_msg .= '<p>' . $phpmailer->ErrorInfo . '</p>';
+				$this->error_msg .= '<p>' . esc_html( $phpmailer->ErrorInfo ) . '</p>';
 				$this->error_msg .= '</p></blockquote>';
 				$this->error_msg .= '</div>';
 			} else {
-				$this->error_msg  = '<div class="updated"><p>' . __( 'Test email sent.', 'configure-smtp' ) . '</p>';
+				$this->error_msg  = '<div class="updated"><p>' . esc_html__( 'Test email sent.', 'configure-smtp' ) . '</p>';
 				/* translators: %s: A timestamp. */
-				$this->error_msg .= '<p>' . sprintf( __( 'The body of the email includes this time-stamp: %s.', 'configure-smtp' ), $timestamp ) . '</p></div>';
+				$this->error_msg .= '<p>' . sprintf( esc_html__( 'The body of the email includes this time-stamp: %s.', 'configure-smtp' ), $timestamp ) . '</p></div>';
 			}
 		}
 	}
@@ -410,15 +410,25 @@ final class c2c_ConfigureSMTP extends c2c_Plugin_066 {
 		$email      = $user->user_email;
 		$action_url = $this->form_action_url();
 
-		echo '<div class="wrap"><h2><a name="test"></a>' . __( 'Send A Test', 'configure-smtp' ) . "</h2>\n";
-		echo '<p>' . __( 'Click the button below to send a test email to yourself to see if things are working. Be sure to save any changes you made to the form above before sending the test email. Bear in mind it may take a few minutes for the email to wind its way through the internet.', 'configure-smtp' ) . "</p>\n";
+		echo '<div class="wrap"><h2><a name="test"></a>' . esc_html__( 'Send A Test', 'configure-smtp' ) . "</h2>\n";
+		echo '<p>' . esc_html__( 'Click the button below to send a test email to yourself to see if things are working. Be sure to save any changes you made to the form above before sending the test email. Bear in mind it may take a few minutes for the email to wind its way through the internet.', 'configure-smtp' ) . "</p>\n";
 		/* translators: %s: An email address. */
-		echo '<p>' . sprintf( __( 'This email will be sent to your email address, %s.', 'configure-smtp' ), $email ) . "</p>\n";
-		echo '<p><em>You must save any changes to the form above before attempting to send a test email.</em></p>';
-		echo "<form name='configure_smtp' action='$action_url' method='post'>\n";
+		echo '<p>' . esc_html( sprintf( __( 'This email will be sent to your email address, %s.', 'configure-smtp' ), $email ) ) . "</p>\n";
+		echo '<p><em>' . esc_html__( 'You must save any changes to the form above before attempting to send a test email.', 'configure-smtp' ) . '</em></p>';
+		printf(
+			"<form name='configure_smtp' action='%s' method='post'>\n",
+			esc_url( $action_url )
+		);
 		wp_nonce_field( $this->nonce_field );
-		echo '<input type="hidden" name="' . $this->get_form_submit_name( 'submit_test_email' ) .'" value="1" />';
-		echo '<div class="submit"><input type="submit" name="Submit" value="' . esc_attr__( 'Send test email', 'configure-smtp' ) . '" /></div>';
+		printf(
+			'<input type="hidden" name="%s" value="1" />',
+			esc_attr( $this->get_form_submit_name( 'submit_test_email' ) )
+		);
+		printf(
+			'<div class="submit"><input type="submit" name="%s" value="%s" /></div>',
+			esc_attr__( 'Submit', 'configure-smtp' ),
+			esc_attr__( 'Send test email', 'configure-smtp' )
+		);
 		echo '</form></div>';
 	}
 
