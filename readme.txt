@@ -70,6 +70,10 @@ There are a number of reasons you could be getting this error:
 
 The connection to the SMTP server was successful, but the credentials you provided (username and/or password) are not correct. Bear in mind these credentials are likely unrelated to the ones you use to log into your site.
 
+= Does this plugin include unit tests? =
+
+Yes.
+
 
 == Screenshots ==
 
