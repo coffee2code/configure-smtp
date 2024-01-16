@@ -988,12 +988,12 @@ HTML;
 	}
 
 	/**
-	 * Returns the URL for a plugin's form to use for its action attribute
+	 * Returns the admin-relative URL for a plugin's form to use for its action attribute.
 	 *
-	 * @return string The action URL
+	 * @return string The action URL.
 	 */
 	protected function form_action_url() {
-		return $_SERVER['PHP_SELF'] . '?page=' . $this->plugin_basename;
+		return $this->settings_page . '.php?page=' . $this->plugin_basename;
 	}
 
 	/**
