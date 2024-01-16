@@ -843,7 +843,7 @@ HTML;
 	 * @return array Links associated with a plugin on the admin Plugins page
 	 */
 	public function plugin_action_links( $action_links ) {
-		$settings_link = '<a href="' . $this->settings_page . '.php?page='.$this->plugin_basename.'">' . $this->get_c2c_string( 'Settings' ) . '</a>';
+		$settings_link = '<a href="' . esc_url( $this->form_action_url() ) . '">' . $this->get_c2c_string( 'Settings' ) . '</a>';
 		array_unshift( $action_links, $settings_link );
 		return $action_links;
 	}

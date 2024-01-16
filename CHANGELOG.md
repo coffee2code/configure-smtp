@@ -5,6 +5,7 @@
   * A significant update from the previous version 046.
   * 067:
     * Change: Simplify `form_action_url()` to avoid using a server global
+    * Change: Use `form_action_url()` in `plugin_action_links()` rather than duplicating its functionality
 * Change: Initialize plugin on `plugins_loaded` action instead of on load
 * Change: Escape all translated text before display
 * Change: Add translator comments for all strings with placeholders
