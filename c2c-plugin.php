@@ -148,7 +148,7 @@ abstract class c2c_Plugin_066 {
 	protected function __construct( $version, $id_base, $author_prefix, $file, $plugin_options = array() ) {
 		$id_base = sanitize_title( $id_base );
 		if ( ! file_exists( $file ) ) {
-			die( sprintf( $this->get_c2c_string( 'Invalid file specified for C2C_Plugin: %s' ), $file ) );
+			die( esc_html( sprintf( $this->get_c2c_string( 'Invalid file specified for C2C_Plugin: %s' ), $file ) ) );
 		}
 
 		$u_id_base = str_replace( '-', '_', $id_base );
@@ -199,8 +199,7 @@ abstract class c2c_Plugin_066 {
 	 * @since 062 Throw error to actually prevent cloning.
 	 */
 	public function __clone() {
-		/* translators: %s: Name of plugin class. */
-		throw new Error( sprintf( $this->get_c2c_string( '%s cannot be cloned.' ), __CLASS__ ) );
+		throw new Error( esc_html( sprintf( $this->get_c2c_string( '%s cannot be cloned.' ), __CLASS__ ) ) );
 	}
 
 	/**
@@ -210,8 +209,7 @@ abstract class c2c_Plugin_066 {
 	 * @since 062 Throw error to actually prevent unserialization.
 	 */
 	public function __wakeup() {
-		/* translators: %s: Name of plugin class. */
-		throw new Error( sprintf( $this->get_c2c_string( '%s cannot be unserialized.' ), __CLASS__ ) );
+		throw new Error( esc_html( sprintf( $this->get_c2c_string( '%s cannot be unserialized.' ), __CLASS__ ) ) );
 	}
 
 	/**
@@ -445,10 +443,10 @@ abstract class c2c_Plugin_066 {
 			$localized_heading_text = $this->name;
 		}
 		if ( $localized_heading_text ) {
-			echo '<h1>' . $localized_heading_text . "</h1>\n";
+			echo '<h1>' . esc_html( $localized_heading_text ) . "</h1>\n";
 		}
 		if ( ! $this->disable_contextual_help ) {
-			echo '<p class="see-help">' . $this->get_c2c_string( 'See the "Help" link to the top-right of the page for more help.' ) . "</p>\n";
+			echo '<p class="see-help">' . esc_html( $this->get_c2c_string( 'See the "Help" link to the top-right of the page for more help.' ) ) . "</p>\n";
 		}
 	}
 
@@ -534,7 +532,6 @@ abstract class c2c_Plugin_066 {
 									$val = str_replace( ',', '', $val );
 								}
 								if ( ! empty( $val ) && ( ! is_numeric( $val ) || ( intval( $val ) != round( $val ) ) ) ) {
-									/* translators: %s: Label for setting. */
 									$msg = sprintf( $this->get_c2c_string( 'Expected integer value for: %s' ), $this->config[ $opt ]['label'] );
 									$error = true;
 									$val = '';
@@ -627,7 +624,7 @@ abstract class c2c_Plugin_066 {
 		// Ensure required configuration options have been configured via the sub-class. Die if any aren't.
 		foreach ( $this->required_config as $config ) {
 			if ( empty( $this->$config ) ) {
-				die( sprintf( $this->get_c2c_string( "The plugin configuration option '%s' must be supplied." ), $config ) );
+				die( esc_html( sprintf( $this->get_c2c_string( "The plugin configuration option '%s' must be supplied." ), $config ) ) );
 			}
 		}
 
@@ -702,14 +699,14 @@ abstract class c2c_Plugin_066 {
 			return $contextual_help;
 		}
 
-		$help = '<h3>' . $this->get_c2c_string( 'More Plugin Help' ) . '</h3>';
+		$help = '<h3>' . esc_html( $this->get_c2c_string( 'More Plugin Help' ) ) . '</h3>';
 		$help .= '<p class="more-help">';
 		$help .= sprintf(
 			'<a title="%s" class="thickbox" href="%s">%s</a>%s',
 			esc_attr( sprintf( $this->get_c2c_string( 'More information about %1$s %2$s' ), $this->name, $this->version ) ),
 			esc_url( admin_url( "plugin-install.php?tab=plugin-information&amp;plugin={$this->id_base}&amp;TB_iframe=true&amp;width=640&amp;height=514" ) ),
-			$this->get_c2c_string( 'Click for more help on this plugin' ),
-			$this->get_c2c_string( ' (especially check out the "Other Notes" tab, if present)' )
+			esc_html( $this->get_c2c_string( 'Click for more help on this plugin' ) ),
+			esc_html( $this->get_c2c_string( ' (especially check out the "Other Notes" tab, if present)' ) )
 		);
 		$help .= ".</p>\n";
 
@@ -731,10 +728,11 @@ abstract class c2c_Plugin_066 {
 
 		$c2c_plugin_css_was_output = true;
 		$logo = plugins_url( 'c2c_minilogo.png', $this->plugin_file );
+
 		/**
-		 * Remember to increment the plugin_css_version variable if changing the CSS
+		 * Note: Remember to increment the plugin_css_version variable if changing the CSS.
 		 */
-		echo <<<HTML
+		?>
 		<style>
 		.long-text {width:98% !important;}
 		#c2c {
@@ -753,7 +751,7 @@ abstract class c2c_Plugin_066 {
 			padding:5px 40px 0 0;
 			width:45%;
 			min-height:40px;
-			background:url('$logo') no-repeat center right;
+			background:url('<?php echo esc_url( $logo ); ?>') no-repeat center right;
 			font-size:larger;
 		}
 		#c2c span {
@@ -777,8 +775,7 @@ abstract class c2c_Plugin_066 {
 		ul.description li, ol.description li {margin-left:1rem;}
 		ul.description ul, ul.description ol, ol.description ul, ol.description ol {list-style:circle;margin-top:0.4rem;}
 		</style>
-
-HTML;
+	<?php
 	}
 
 	/**
@@ -854,7 +851,12 @@ HTML;
 	public function donate_link( $links, $file ) {
 		if ( $file == $this->plugin_basename ) {
 			$title         = $this->get_c2c_string( 'Coffee fuels my coding.' );
-			$links[] = '<a href="' . esc_url( $this->donation_url ) . '" title="' . esc_attr( $title ) . '">' . $this->get_c2c_string( 'Donate' ) . '</a>';
+			$links[] = printf(
+				'<a href="%s" title="%s"></a>',
+				esc_url( $this->donation_url ),
+				esc_attr( $title ),
+				esc_html( $this->get_c2c_string( 'Donate' ) )
+			);
 		}
 		return $links;
 	}
@@ -1021,7 +1023,7 @@ HTML;
 		if ( ! did_action( 'admin_init' ) ) {
 			_doing_it_wrong(
 				__METHOD__,
-				sprintf( $this->get_c2c_string( 'The method %1$s should not be called until after the %2$s action.' ), 'is_plugin_admin_page()', 'admin_init' ),
+				esc_html( sprintf( $this->get_c2c_string( 'The method %1$s should not be called until after the %2$s action.' ), 'is_plugin_admin_page()', 'admin_init' ) ),
 				'063'
 			);
 		}
@@ -1114,49 +1116,79 @@ HTML;
 			if ( $input == 'textarea' ) {
 				echo "</td><tr><td colspan='2'>";
 			}
-			echo "<textarea {$attribs}>{$value}</textarea>\n";
+			printf(
+				'<textarea %s>%s</textarea>' . "\n",
+				esc_html( $attribs ),
+				wp_kses_post( $value )
+			);
 		} elseif ( $input == 'select' ) {
-			echo "<select $attribs>";
+			echo '<select ' . esc_html( $attribs ) . '>';
 			if ( $this->config[ $opt ]['datatype'] == 'hash' ) {
 				foreach ( (array) $this->config[ $opt ]['options'] as $sopt => $sval ) {
-					echo "<option value='{$sopt}' " . selected( $value, $sopt, false ) . ">{$sval}</option>\n";
+					printf(
+						'<option value="%s" ' . selected( $value, $sopt, false ) . ">%s</option>\n",
+						esc_attr( $sopt ),
+						esc_html( $sval )
+					);
 				}
 			} else {
 				foreach ( (array) $this->config[ $opt ]['options'] as $sopt ) {
-					echo "<option value='{$sopt}' " . selected( $value, $sopt, false ) . ">{$sopt}</option>\n";
+					printf(
+						'<option value="%s" ' . selected( $value, $sopt, false ) . ">%s</option>\n",
+						esc_attr( $sopt ),
+						esc_attr( $sopt )
+					);
 				}
 			}
 			echo "</select>";
 		} elseif ( $input == 'multiselect' ) {
 			echo '<fieldset class="c2c-fieldset">' . "\n";
 			foreach ( (array) $this->config[ $opt ]['options'] as $sopt ) {
-				echo "<input type='checkbox' {$attribs} value='{$sopt}' " . checked( in_array( $sopt, $value ), true, false ) . ">{$sopt}</input><br />\n";
-			}
+				printf(
+					'<input type="checkbox" %s value="%s" ' . checked( in_array( $sopt, $value ), true, false ) . ">%s</input><br />\n",
+					esc_html( $attribs ),
+					esc_attr( $sopt ),
+					esc_html( $sopt )
+				);
+				}
 			echo '</fieldset>';
 		} elseif ( $input == 'checkbox' ) {
-			echo "<input type='{$input}' {$attribs} value='1' " . checked( $value, 1, false ) . " />\n";
+			printf(
+				'<input type="%s" %s value="1" ' . checked( $value, 1, false ) . ' />' . "\n",
+				esc_attr( $input ),
+				esc_html( $attribs )
+			);
 			if ( ! empty( $this->config[ $opt ]['help'] ) ) {
-				printf( "<label class='description' for='%s'>%s</label>\n", $opt, $this->config[ $opt ]['help'] );
+				printf(
+					"<label class='description' for='%s'>%s</label>\n",
+					esc_attr( $opt ),
+					wp_kses_post( $this->config[ $opt ]['help'] )
+				);
 				$this->config[ $opt ]['help'] = '';
 			}
 		} else { // Only 'text' and 'password' should fall through to here.
-			echo "<input type='{$input}' {$attribs} value='" . esc_attr( $value ) . "' />\n";
+			printf(
+				'<input type="%s" %s value="%s" />' . "\n",
+				esc_attr( $input ),
+				esc_html( $attribs ),
+				esc_attr( $value )
+			);
 		}
 		// Help intended to be inline (usually with a text field; checkboxes naturally have their help inline)
 		if ( $help = apply_filters( $this->get_hook( 'option_help'), $this->config[ $opt ]['inline_help'], $opt, 'inline_help' ) ) {
-			echo "<p class='description inline-description'>{$help}</p>\n";
+			echo "<p class='description inline-description'>" . wp_kses_post( $help ) . "</p>\n";
 		}
 		// Help intended to be shown below an input field.
 		if ( $help = apply_filters( $this->get_hook( 'option_help'), $this->config[ $opt ]['help'], $opt, 'help' ) ) {
-			echo "<p class='description'>{$help}</p>\n";
+			echo "<p class='description'>" . wp_kses_post( $help ) . "</p>\n";
 		}
 		// Additional paragraph of help intended to follow the main 'help'.
 		if ( $help = apply_filters( $this->get_hook( 'option_help'), $this->config[ $opt ]['more_help'], $opt, 'more_help' ) ) {
-			echo "<p class='description'>{$help}</p>\n";
+			echo "<p class='description'>" . wp_kses_post( $help ) . "</p>\n";
 		}
 		// Additional help of custom markup (block elements that wouldn't fit into the default help paragraph markup).
 		if ( $help = apply_filters( $this->get_hook( 'option_help'), $this->config[ $opt ]['raw_help'], $opt, 'raw_help' ) ) {
-			echo $help . "\n";
+			echo wp_kses_post( $help ) . "\n";
 		}
 
 		do_action( $this->get_hook( 'post_display_option' ), $opt );
@@ -1170,7 +1202,7 @@ HTML;
 		$options = $this->get_options();
 
 		if ( $this->saved_settings ) {
-			echo "<div id='message' class='updated fade'><p><strong>" . $this->saved_settings_msg . '</strong></p></div>';
+			echo "<div id='message' class='updated fade'><p><strong>" . esc_html( $this->saved_settings_msg ) . '</strong></p></div>';
 		}
 
 		echo "<div class='wrap'>\n";
@@ -1194,14 +1226,14 @@ HTML;
 
 		echo '<div id="c2c" class="wrap"><div>' . "\n";
 		printf(
-			$this->get_c2c_string( 'This plugin brought to you by %s.' ),
+			wp_kses_data( $this->get_c2c_string( 'This plugin brought to you by %s.' ) ),
 			'<a href="https://coffee2code.com" title="' . esc_attr( $this->get_c2c_string( 'The plugin author homepage.' ) ) . '">Scott Reilly (coffee2code)</a>'
 		);
 		printf(
 			'<span><a href="%1$s" title="%2$s">%3$s</span>',
 			esc_url( $this->donation_url ),
 			esc_attr( $this->get_c2c_string( "Thanks for the consideration; it's much appreciated." ) ),
-			$this->get_c2c_string( 'If this plugin has been useful to you, please consider a donation.' )
+			esc_html( $this->get_c2c_string( 'If this plugin has been useful to you, please consider a donation.' ) )
 		);
 		echo "</div>\n";
 
