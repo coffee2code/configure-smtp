@@ -28,6 +28,7 @@
         * Change: Rename `phpunit.xml` to `phpunit.xml.dist` per best practices
     * Default `WP_TESTS_DIR` to `/tmp/wordpress-tests-lib` rather than erroring out if not defined via environment variable
     * Enable more error output for unit tests
+* Change: Tweak installation instructions
 * Change: Update links to coffee2code.com to be HTTPS
 * Change: Add GitHub link to readme
 * Change: Reduce number of tags defined in readme.txt

@@ -7,6 +7,9 @@ A plugin for WordPress for configuring SMTP mailing in WordPress, including supp
 
 1. Install via the built-in WordPress plugin installer. Or install the plugin code inside the plugins directory for your site (typically `/wp-content/plugins/`).
 2. Activate the plugin through the 'Plugins' admin menu in WordPress.
+3. Go to "Settings" -> "Configure SMTP" and configure the plugin's settings. (You can also use the "Settings" link in the plugin's entry on the admin "Plugins" page).
+4. (Optional.) Use the built-in test tool (also on the plugin's settings page) to see if your blog can properly send out emails.
+
 
 
 ## Additional Documentation
