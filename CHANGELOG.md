@@ -7,6 +7,7 @@
     * Change: Simplify `form_action_url()` to avoid using a server global
     * Change: Use `form_action_url()` in `plugin_action_links()` rather than duplicating its functionality
     * Change: Escape output of all translated strings
+    * Change: Convert `register_filters()` to an abstract declaration
     * Change: Improve function documentation
     * Change: Adjust function documentation formatting to align with WP core
     * Change: Note compatibility through WP 6.5+

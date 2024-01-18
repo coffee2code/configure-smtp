@@ -597,6 +597,16 @@ abstract class c2c_Plugin_066 {
 	abstract public function get_c2c_string( $string );
 
 	/**
+	 * Registers filters.
+	 *
+	 * @since 065 Changed to be abstract.
+	 *
+	 * NOTE: This occurs during the 'init' filter, so you can't use this to hook
+	 * anything that happens earlier.
+	 */
+	abstract public function register_filters();
+
+	/**
 	 * Adds a new option to the plugin's configuration.
 	 *
 	 * Intended to be used for dynamically adding a new option after the config
@@ -673,15 +683,6 @@ abstract class c2c_Plugin_066 {
 	 */
 	protected function load_textdomain() {
 		load_plugin_textdomain( $this->id_base );
-	}
-
-	/**
-	 * Registers filters.
-	 * NOTE: This occurs during the 'init' filter, so you can't use this to hook
-	 * anything that happens earlier.
-	 */
-	public function register_filters() {
-		// This should be overridden in order to define filters.
 	}
 
 	/**
