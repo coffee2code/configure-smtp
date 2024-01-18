@@ -439,7 +439,7 @@ abstract class c2c_Plugin_066 {
 			$localized_heading_text = '';
 		}
 
-		if ( empty( $localized_heading_text ) ) {
+		if ( ! $localized_heading_text ) {
 			$localized_heading_text = $this->name;
 		}
 		if ( $localized_heading_text ) {
