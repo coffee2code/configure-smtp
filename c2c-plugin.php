@@ -494,6 +494,9 @@ abstract class c2c_Plugin_066 {
 
 	/**
 	 * Sanitizes user inputs prior to saving.
+	 *
+	 * @param string[] $inputs
+	 * @return string[] Sanitized inputs.
 	 */
 	public function sanitize_inputs( $inputs ) {
 		do_action( $this->get_hook( 'before_save_options' ), $this );
@@ -618,7 +621,7 @@ abstract class c2c_Plugin_066 {
 	}
 
 	/**
-	 * Verify that the necessary configuration files were set in the inheriting class.
+	 * Verifies that the necessary configuration files were set in the inheriting class.
 	 */
 	public function verify_config() {
 		// Ensure required configuration options have been configured via the sub-class. Die if any aren't.
@@ -801,7 +804,7 @@ abstract class c2c_Plugin_066 {
 	}
 
 	/**
-	 * Initialize help tabs.
+	 * Initializes help tabs.
 	 *
 	 * @since 034
 	 */
@@ -823,6 +826,8 @@ abstract class c2c_Plugin_066 {
 	 * This should be overridden by inheriting class if it needs help content.
 	 *
 	 * @since 034
+	 *
+	 * @param WP_Screen $screen
 	 */
 	public function help_tabs_content( $screen ) {
 		$screen->add_help_tab( array(
@@ -847,6 +852,10 @@ abstract class c2c_Plugin_066 {
 
 	/**
 	 * Adds donate link to plugin row.
+	 *
+	 * @param string[] $links Array of plugin row links.
+	 * @param string   $file  Filename.
+	 * @return string[]
 	 */
 	public function donate_link( $links, $file ) {
 		if ( $file == $this->plugin_basename ) {
@@ -862,13 +871,12 @@ abstract class c2c_Plugin_066 {
 	}
 
 	/**
-	 * See if the setting is pertinent to this version of WP
+	 * Determines if the setting is pertinent to this version of WP.
 	 *
 	 * @since 013
 	 *
 	 * @param string $opt The option name.
-	 *
-	 * @return bool If the option is valid for this version of WP.
+	 * @return bool True if the option is valid for this version of WP, else false.
 	 */
 	protected function is_option_valid( $opt ) {
 		global $wp_version;
@@ -889,7 +897,6 @@ abstract class c2c_Plugin_066 {
 	 * Returns the list of option names.
 	 *
 	 * @param bool $include_non_options Optional. Should non-options be included? Default is false.
-	 *
 	 * @return array Array of option names.
 	 */
 	protected function get_option_names( $include_non_options = false ) {
@@ -916,9 +923,9 @@ abstract class c2c_Plugin_066 {
 	 * Returns either the buffered array of all options for the plugin, or
 	 * obtains the options and buffers the value.
 	 *
-	 * @param bool $with_current_values Optional. Should the currently saved values be returned? If false, then the plugin's defaults are returned. Default is true.
-	 *
-	 * @return array The options array for the plugin (which is also stored in $this->options if !$with_options).
+	 * @param bool $with_current_values Optional. Should the currently saved values be returned?
+	 *                                  If false, then the plugin's defaults are returned. Default is true.
+	 * @return array The options array for the plugin.
 	 */
 	public function get_options( $with_current_values = true ) {
 		if ( $with_current_values && $this->options ) {
@@ -964,9 +971,8 @@ abstract class c2c_Plugin_066 {
 	 *
 	 * @since 037
 	 *
-	 * @param array $settings   The new setting value(s)
+	 * @param array $settings   The new setting value(s).
 	 * @param bool  $with_reset Should the options be reset, with the new settings overlaid on top of the default settings?
-	 *
 	 * @return array
 	 */
 	public function update_option( $settings, $with_reset = false ) {
@@ -982,7 +988,6 @@ abstract class c2c_Plugin_066 {
 	 * Gets the name to use for a form's <input type="hidden" name="XXX" value="1" />
 	 *
 	 * @param string $prefix A prefix string, unique to the form.
-	 *
 	 * @return string The name.
 	 */
 	protected function get_form_submit_name( $prefix ) {
@@ -999,7 +1004,7 @@ abstract class c2c_Plugin_066 {
 	}
 
 	/**
-	 * Checks if the plugin's settings page has been submitted.
+	 * Determines if the plugin's settings page has been submitted.
 	 *
 	 * @return bool True if the plugin's settings have been submitted for saving, else false.
 	 */
@@ -1008,7 +1013,7 @@ abstract class c2c_Plugin_066 {
 	}
 
 	/**
-	 * Checks if the current page is the plugin's settings page.
+	 * Determines if the current page is the plugin's settings page.
 	 *
 	 * Note: This should not be used during or before `'admin_init'` since the
 	 * current screen won't be set yet.
@@ -1244,7 +1249,6 @@ abstract class c2c_Plugin_066 {
 	 * Returns the full plugin-specific name for a hook.
 	 *
 	 * @param string $hook The name of a hook, to be made plugin-specific.
-	 *
 	 * @return string The plugin-specific version of the hook name.
 	 */
 	public function get_hook( $hook ) {
@@ -1256,7 +1260,7 @@ abstract class c2c_Plugin_066 {
 	 *
 	 * @since 005
 	 *
-	 * @return string The URL
+	 * @return string The URL.
 	 */
 	public function readme_url() {
 		return 'https://plugins.svn.wordpress.org/' . $this->id_base . '/tags/' . $this->version . '/readme.txt';
