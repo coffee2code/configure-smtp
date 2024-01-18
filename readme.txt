@@ -41,7 +41,7 @@ Links: [Plugin Homepage](https://coffee2code.com/wp-plugins/configure-smtp/) | [
 1. Install via the built-in WordPress plugin installer. Or install the plugin code inside the plugins directory for your site (typically `/wp-content/plugins/`).
 1. Activate the plugin through the 'Plugins' admin menu in WordPress
 1. Go to "Settings" -> "Configure SMTP" and configure the plugin's settings. (You can also use the "Settings" link in the plugin's entry on the admin "Plugins" page).
-1. (Optional.) Use the built-in test to see if your blog can properly send out emails.
+1. (Optional.) Use the built-in test tool (also located on the plugin's settings page) to see if your blog can properly send out emails.
 
 
 == Frequently Asked Questions ==
