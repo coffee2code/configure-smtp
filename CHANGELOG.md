@@ -16,7 +16,7 @@
 * Change: Add translator comments for all strings with placeholders
 * New: Add README.md
 * New: Add CHANGELOG.md file and move all but most recent changelog entries into it
-* New: Add TODO.md file and move existing TODO list from top of main plugin file into it
+* New: Add TODO.md file and move existing TODO list from top of main plugin file into it (and add to it)
 * New: Add `.gitignore` file
 * Change: Use `wp_add_inline_script()` instead of `wp_localize_script()`
 * Unit tests:
