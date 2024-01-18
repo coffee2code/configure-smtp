@@ -36,7 +36,7 @@
 * Change: Update links to coffee2code.com to be HTTPS
 * Change: Add GitHub link to readme
 * Change: Reduce number of tags defined in readme.txt
-* Change: Note compatibility through WP 6.4+
+* Change: Note compatibility through WP 6.5+
 * Change: Drop compatibility with versions of WP older than 4.9
 * Change: Update copyright date (2024)
 
