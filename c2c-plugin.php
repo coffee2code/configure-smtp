@@ -7,7 +7,7 @@
 /*
 Basis for other plugins.
 
-Compatible with WordPress 4.9 through 6.5+.
+Compatible with WordPress 5.5 through 6.5+.
 
 */
 
@@ -422,9 +422,7 @@ abstract class c2c_Plugin_067 {
 	public function allowed_options( $options ) {
 		$added = array( $this->admin_options_name => array( $this->admin_options_name ) );
 
-		return function_exists( 'add_allowed_options' )
-			? add_allowed_options( $added, $options )
-			: add_option_whitelist( $added, $options );
+		return add_allowed_options( $added, $options );
 	}
 
 	/**

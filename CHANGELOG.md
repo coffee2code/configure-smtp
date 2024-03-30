@@ -11,6 +11,7 @@
     * Change: Improve function documentation
     * Change: Adjust function documentation formatting to align with WP core
     * Change: Note compatibility through WP 6.5+
+    * Change: Drop compatibility with version of WP older than 5.5
 * Change: Initialize plugin on `plugins_loaded` action instead of on load
 * Change: Escape all translated text before display
 * Change: Replace a few terms used in translated strings
