@@ -13,6 +13,7 @@
     * Change: Note compatibility through WP 6.5+
 * Change: Initialize plugin on `plugins_loaded` action instead of on load
 * Change: Escape all translated text before display
+* Change: Replace a few terms used in translated strings
 * Change: Add translator comments for all strings with placeholders
 * New: Add README.md
 * New: Add CHANGELOG.md file and move all but most recent changelog entries into it

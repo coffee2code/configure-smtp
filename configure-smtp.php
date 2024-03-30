@@ -138,7 +138,7 @@ final class c2c_ConfigureSMTP extends c2c_Plugin_067 {
 				'input'    => 'checkbox',
 				'default'  => false,
 				'label'    => __( 'Send email via Gmail?', 'configure-smtp' ),
-				'help'     => __( 'Clicking this will override many of the settings defined below. You will need to input your Gmail username and password below.', 'configure-smtp' ),
+				'help'     => __( 'Clicking this will overwrite many of the settings defined below. You will need to input your Gmail username and password below.', 'configure-smtp' ),
 			),
 			'host' => array(
 				'input'    => 'text',
@@ -336,7 +336,7 @@ final class c2c_ConfigureSMTP extends c2c_Plugin_067 {
 
 			// Localize script.
 			wp_localize_script( $this->id_base, 'c2c_configure_smtp', array(
-				'alert'     => __( 'Bebebe sure to specify your full Gmail email address (including the "@gmail.com") as the SMTP username, and your Gmail password as the SMTP password.', 'configure-smtp' ),
+				'alert'     => __( 'Be sure to specify your full Gmail email address (including the "@gmail.com") as the SMTP username, and your Gmail password as the SMTP password.', 'configure-smtp' ),
 				'checked'   => $this->gmail_config['smtp_auth'] ? '1' : '',
 				'host'      => $this->gmail_config['host'],
 				'port'      => $this->gmail_config['port'],
@@ -349,7 +349,7 @@ final class c2c_ConfigureSMTP extends c2c_Plugin_067 {
 	}
 
 	/**
-	 * If the 'Use Gmail' option is checked, the Gmail settings will override whatever the user may have provided.
+	 * If the 'Use Gmail' option is checked, the Gmail settings will overwrite whatever the user may have provided.
 	 *
 	 * @param  array $options The options array prior to saving.
 	 * @return array The options array with Gmail settings taking precedence, if relevant.
@@ -376,14 +376,14 @@ final class c2c_ConfigureSMTP extends c2c_Plugin_067 {
 			$timestamp = current_time( 'mysql' );
 
 			/* translators: %s: Name of the plugin. */
-			$message = sprintf( __( 'Hi, this is the %s plugin emailing you a test message from your WordPress blog.', 'configure-smtp' ), $this->name );
+			$message = sprintf( __( 'Hi, this is the %s plugin emailing you a test message from your WordPress site.', 'configure-smtp' ), $this->name );
 			$message .= "\n\n";
 			/* translators: %s: A timestamp. */
 			$message .= sprintf( __( 'This message was sent with this time-stamp: %s', 'configure-smtp' ), $timestamp );
 			$message .= "\n\n";
-			$message .= __( 'Congratulations!  Your blog is properly configured to send email.', 'configure-smtp' );
+			$message .= __( 'Congratulations! Your site is properly configured to send email.', 'configure-smtp' );
 
-			wp_mail( $email, __( 'Test message from your WordPress blog', 'configure-smtp' ), $message );
+			wp_mail( $email, __( 'Test message from your WordPress site', 'configure-smtp' ), $message );
 
 			// Check success
 			global $phpmailer;
