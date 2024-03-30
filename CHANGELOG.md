@@ -39,7 +39,7 @@
 * Change: Add GitHub link to readme
 * Change: Reduce number of tags defined in readme.txt
 * Change: Note compatibility through WP 6.5+
-* Change: Drop compatibility with versions of WP older than 4.9
+* Change: Drop compatibility with versions of WP older than 5.5
 * Change: Update copyright date (2024)
 
 ## 3.2 _(2016-11-14)_
