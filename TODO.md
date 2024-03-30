@@ -14,5 +14,9 @@ The following list comprises ideas, suggestions, and known issues, all of which 
     * Modify the localized 'alert' string to remove the instructions to specify a full Gmail address
 * Add hooks
 * Rewrite JS to remove jQuery dependency
+* Don't configure outgoing email name and email address unless SMTP is being used
+    * Create `is_configured()` that checks to see if SMTP is configured enough to be used
+    * Remove related text from help text for the two fields
+
 
 Feel free to make your own suggestions or champion for something already on the list (via the [plugin's support forum on WordPress.org](https://wordpress.org/support/plugin/configure-smtp/) or on [GitHub](https://github.com/coffee2code/configure-smtp/) as an issue or PR).
