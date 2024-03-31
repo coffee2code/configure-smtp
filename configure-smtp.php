@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Configure SMTP
- * Version:     3.2
+ * Version:     3.5
  * Plugin URI:  https://coffee2code.com/wp-plugins/configure-smtp/
  * Author:      Scott Reilly
  * Author URI:  https://coffee2code.com
@@ -18,7 +18,7 @@
  *
  * @package Configure_SMTP
  * @author  Scott Reilly
- * @version 3.1
+ * @version 3.5
  */
 
 /*
@@ -102,7 +102,7 @@ final class c2c_ConfigureSMTP extends c2c_Plugin_067 {
 	 * Constructor.
 	 */
 	protected function __construct() {
-		parent::__construct( '3.2', 'configure-smtp', 'c2c', __FILE__, array() );
+		parent::__construct( '3.5', 'configure-smtp', 'c2c', __FILE__, array() );
 		register_activation_hook( __FILE__, array( __CLASS__, 'activation' ) );
 
 		return self::$instance = $this;

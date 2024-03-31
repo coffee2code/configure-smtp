@@ -82,7 +82,7 @@ class Configure_SMTP_Test extends WP_UnitTestCase {
 	}
 
 	public function test_version() {
-		$this->assertEquals( '3.2', c2c_ConfigureSMTP::get_instance()->version() );
+		$this->assertEquals( '3.5', c2c_ConfigureSMTP::get_instance()->version() );
 	}
 
 	public function test_instance_object_is_returned() {
