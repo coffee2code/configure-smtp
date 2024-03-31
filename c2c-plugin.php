@@ -1044,6 +1044,28 @@ abstract class c2c_Plugin_067 {
 	}
 
 	/**
+	 * Returns escaped attributes string for an HTML tag.
+	 *
+	 * @since 067
+	 *
+	 * @param string[] $attributes Associative array of attribute names and values.
+	 * @return string
+	 */
+	public function esc_attributes( $attributes ) {
+		$string = '';
+
+		foreach ( $attributes as $key => $value ) {
+			$string .= sprintf(
+				'%s="%s" ',
+				esc_attr( strip_tags( $key ) ),
+				esc_html( strip_tags( $value ) )
+			);
+		}
+
+		return trim( $string );
+	}
+
+	/**
 	 * Outputs the markup for an option's form field (and surrounding markup)
 	 *
 	 * @param string $opt The name/key of the option.

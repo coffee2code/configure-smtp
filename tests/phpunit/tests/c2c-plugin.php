@@ -236,4 +236,15 @@ class c2c_Plugin extends WP_UnitTestCase {
 		$this->assertEquals( 'configure_smtp__example-hook', $this->obj->get_hook( 'example-hook' ) );
 	}
 
+	/*
+	 * esc_attributes()
+	 */
+
+	public function test_esc_attributes() {
+		$this->assertEquals( 'vehicle="Tardis" doctor="10"', $this->obj->esc_attributes( [ 'vehicle' => 'Tardis', 'doctor' => 10 ] ) );
+		$this->assertEquals( 'title="This is a &quot;quoted string&quot;"', $this->obj->esc_attributes( [ 'title' => 'This is a "quoted string"' ] ) );
+		$this->assertEquals( 'title="This shan&#039;t not be apotrophized."', $this->obj->esc_attributes( [ 'title' => "This shan't not be apotrophized." ] ) );
+		$this->assertEquals( 'title="HTML tags are a no go."', $this->obj->esc_attributes( [ 'title' => 'HTML tags are a <strong>no go</strong>.' ] ) );
+	}
+
 }
