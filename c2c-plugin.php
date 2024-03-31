@@ -1180,15 +1180,15 @@ abstract class c2c_Plugin_067 {
 		}
 		// Help intended to be inline (usually with a text field; checkboxes naturally have their help inline)
 		if ( $help = apply_filters( $this->get_hook( 'option_help'), $this->config[ $opt ]['inline_help'], $opt, 'inline_help' ) ) {
-			echo "<p class='description inline-description'>" . wp_kses_post( $help ) . "</p>\n";
+			echo '<p class="description inline-description">' . wp_kses_post( $help ) . "</p>\n";
 		}
 		// Help intended to be shown below an input field.
 		if ( $help = apply_filters( $this->get_hook( 'option_help'), $this->config[ $opt ]['help'], $opt, 'help' ) ) {
-			echo "<p class='description'>" . wp_kses_post( $help ) . "</p>\n";
+			echo '<p class="description">' . wp_kses_post( $help ) . "</p>\n";
 		}
 		// Additional paragraph of help intended to follow the main 'help'.
 		if ( $help = apply_filters( $this->get_hook( 'option_help'), $this->config[ $opt ]['more_help'], $opt, 'more_help' ) ) {
-			echo "<p class='description'>" . wp_kses_post( $help ) . "</p>\n";
+			echo '<p class="description">' . wp_kses_post( $help ) . "</p>\n";
 		}
 		// Additional help of custom markup (block elements that wouldn't fit into the default help paragraph markup).
 		if ( $help = apply_filters( $this->get_hook( 'option_help'), $this->config[ $opt ]['raw_help'], $opt, 'raw_help' ) ) {
