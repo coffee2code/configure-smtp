@@ -498,6 +498,8 @@ abstract class c2c_Plugin_067 {
 	 */
 	public function sanitize_inputs( $inputs ) {
 		do_action( $this->get_hook( 'before_save_options' ), $this );
+		// PHPCS: The Settings API already verifies nonce, so no need to do so here.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( isset( $_POST['Reset'] ) ) {
 			$options = $this->reset_options();
 			add_settings_error( 'general', 'settings_reset', $this->get_c2c_string( 'Settings reset.' ), 'updated' );
@@ -1036,6 +1038,8 @@ abstract class c2c_Plugin_067 {
 	 * @return bool True if the plugin's settings have been submitted for saving, else false.
 	 */
 	protected function is_submitting_form() {
+		// PHPCS: The POST value only being read and not meaningfully used.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		return ( isset( $_POST['option_page'] ) && ( $_POST['option_page'] == $this->admin_options_name ) );
 	}
 

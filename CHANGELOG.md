@@ -14,6 +14,7 @@
     * Change: Explicitly declare object variables rather than doing so dynamically
     * Change: Convert `register_filters()` to an abstract declaration
     * Change: Use double quotes for attribute of paragraph for setting description
+    * Change: Prevent unwarranted PHPCS complaints about nonces
     * Change: Improve function documentation
     * Change: Adjust function documentation formatting to align with WP core
     * Change: Note compatibility through WP 6.5+
