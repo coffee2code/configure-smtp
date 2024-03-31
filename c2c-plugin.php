@@ -1089,8 +1089,8 @@ abstract class c2c_Plugin_067 {
 		foreach ( $attributes as $key => $value ) {
 			$string .= sprintf(
 				'%s="%s" ',
-				esc_attr( strip_tags( $key ) ),
-				esc_html( strip_tags( $value ) )
+				esc_attr( wp_strip_all_tags( $key ) ),
+				esc_html( wp_strip_all_tags( $value ) )
 			);
 		}
 
