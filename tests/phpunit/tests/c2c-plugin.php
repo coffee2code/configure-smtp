@@ -237,6 +237,24 @@ class c2c_Plugin extends WP_UnitTestCase {
 	}
 
 	/*
+	 * add_option()
+	 */
+
+	/**
+	 * @expectedIncorrectUsage input_attributes
+	 */
+	 public function test_display_option__invalid_input_attributes() {
+		$this->obj->add_option( 'shorttextfield', [
+			'input'    => 'short_text',
+			'default'  => 25,
+			'datatype' => 'int',
+			'required' => true,
+			'label'    => 'Short text field',
+			'input_attributes' => '',
+		] );
+	}
+
+	/*
 	 * esc_attributes()
 	 */
 

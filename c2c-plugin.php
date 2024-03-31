@@ -111,7 +111,7 @@ abstract class c2c_Plugin_067 {
 		'help'             => '',
 		'inline_help'      => '',
 		'input'            => '',
-		'input_attributes' => '',
+		'input_attributes' => [],
 		'label'            => '',
 		'more_help'        => '',
 		'no_wrap'          => false,
@@ -1116,9 +1116,12 @@ abstract class c2c_Plugin_067 {
 			$value = number_format_i18n( $value );
 		}
 		$attributes = $this->config[ $opt ]['input_attributes'];
+		if ( ! is_array( $attributes ) ) {
+			$attributes = [];
+		}
 		$this->config[ $opt ]['class'][] = 'c2c-' . $input;
 		if ( ( 'textarea' == $input || 'inline_textarea' == $input ) && $this->config[ $opt ]['no_wrap'] ) {
-			$attributes .= ' wrap="off"'; // Does not validate, but only cross-browser technique
+			$attributes['wrap'] = 'off'; // Does not validate, but only cross-browser technique
 		}
 		elseif ( in_array( $input, array( 'text', 'long_text', 'short_text' ) ) ) {
 			$this->config[ $opt ]['class'][]  = ( ( $input == 'short_text' ) ? 'small-text' : 'regular-text' );
@@ -1131,7 +1134,10 @@ abstract class c2c_Plugin_067 {
 			$this->config[ $opt ]['class'][] = 'small-text';
 		}
 		$class = implode( ' ', $this->config[ $opt ]['class'] );
-		$attribs = "name='{$popt}' id='{$opt}' class='{$class}' {$attributes}";
+		$attributes['class'] = $class;
+		$attributes['id']    = $opt;
+		$attributes['name']  = $popt;
+
 		if ( $input == '' ) {
 // Change of implementation prevents this from being possible (since this function only gets called for registered settings)
 //			if ( !empty( $this->config[ $opt ]['output'] ) )
@@ -1144,11 +1150,15 @@ abstract class c2c_Plugin_067 {
 			}
 			printf(
 				'<textarea %s>%s</textarea>' . "\n",
-				esc_html( $attribs ),
+				// PHPCS: The keys and values of all attributes are being escaped by esc_attributes(), so this is safe.
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				$this->esc_attributes( $attributes ),
 				wp_kses_post( $value )
 			);
 		} elseif ( $input == 'select' ) {
-			echo '<select ' . esc_html( $attribs ) . '>';
+			// PHPCS: The keys and values of all attributes are being escaped by esc_attributes(), so this is safe.
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '<select ' . $this->esc_attributes( $attributes ) . '>';
 			if ( $this->config[ $opt ]['datatype'] == 'hash' ) {
 				foreach ( (array) $this->config[ $opt ]['options'] as $sopt => $sval ) {
 					printf(
@@ -1172,7 +1182,9 @@ abstract class c2c_Plugin_067 {
 			foreach ( (array) $this->config[ $opt ]['options'] as $sopt ) {
 				printf(
 					'<input type="checkbox" %s value="%s" ' . checked( in_array( $sopt, $value ), true, false ) . ">%s</input><br />\n",
-					esc_html( $attribs ),
+					// PHPCS: The keys and values of all attributes are being escaped by esc_attributes(), so this is safe.
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					$this->esc_attributes( $attributes ),
 					esc_attr( $sopt ),
 					esc_html( $sopt )
 				);
@@ -1182,7 +1194,9 @@ abstract class c2c_Plugin_067 {
 			printf(
 				'<input type="%s" %s value="1" ' . checked( $value, 1, false ) . ' />' . "\n",
 				esc_attr( $input ),
-				esc_html( $attribs )
+				// PHPCS: The keys and values of all attributes are being escaped by esc_attributes(), so this is safe.
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				$this->esc_attributes( $attributes )
 			);
 			if ( ! empty( $this->config[ $opt ]['help'] ) ) {
 				printf(
@@ -1196,7 +1210,9 @@ abstract class c2c_Plugin_067 {
 			printf(
 				'<input type="%s" %s value="%s" />' . "\n",
 				esc_attr( $input ),
-				esc_html( $attribs ),
+				// PHPCS: The keys and values of all attributes are being escaped by esc_attributes(), so this is safe.
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				$this->esc_attributes( $attributes ),
 				esc_attr( $value )
 			);
 		}

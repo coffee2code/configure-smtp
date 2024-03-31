@@ -4,6 +4,8 @@
 * Change: Update plugin framework to 067
   * A significant update from the previous version 046.
   * 067:
+    * Breaking: Require config attribute 'input_attributes' to be an array
+    * Hardening: Treat input attributes as array and escape each element before output
     * Change: Simplify `form_action_url()` to avoid using a server global
     * Change: Use `form_action_url()` in `plugin_action_links()` rather than duplicating its functionality
     * Change: Escape output of all translated strings
