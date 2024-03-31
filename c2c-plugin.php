@@ -885,10 +885,10 @@ abstract class c2c_Plugin_067 {
 	 * @return string[]
 	 */
 	public function donate_link( $links, $file ) {
-		if ( $file == $this->plugin_basename ) {
-			$title         = $this->get_c2c_string( 'Coffee fuels my coding.' );
-			$links[] = printf(
-				'<a href="%s" title="%s"></a>',
+		if ( $file === $this->plugin_basename ) {
+			$title   = $this->get_c2c_string( 'Coffee fuels my coding.' );
+			$links[] = sprintf(
+				'<a href="%s" title="%s">%s</a>',
 				esc_url( $this->donation_url ),
 				esc_attr( $title ),
 				esc_html( $this->get_c2c_string( 'Donate' ) )
