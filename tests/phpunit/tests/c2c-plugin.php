@@ -6,6 +6,15 @@ class c2c_Plugin extends WP_UnitTestCase {
 
 	protected $obj;
 
+	protected static $example_option = [
+		'input'    => 'short_text',
+		'default'  => 25,
+		'datatype' => 'int',
+		'required' => true,
+		'label'    => 'Short text field',
+		'input_attributes' => [],
+	];
+
 	public function setUp() {
 		parent::setUp();
 
@@ -59,6 +68,7 @@ class c2c_Plugin extends WP_UnitTestCase {
 		return $count;
 	}
 
+
 	//
 	//
 	// DATA PROVIDERS
@@ -87,6 +97,29 @@ class c2c_Plugin extends WP_UnitTestCase {
 			[ '5.5', '5.5',   '!=', false ],
 		);
 	}
+
+	public static function invalid_config_attributes() {
+		return [
+			// [ attribute name, value with invalid datatype for attribute ]
+			[ 'allow_html',       '' ], // supposed to be... bool
+			[ 'class',            '' ], // array
+			[ 'datatype',         [] ], // string
+			[ 'help',             1 ], // string
+			[ 'inline_help',      15 ], // string
+			[ 'input',            13.4 ], // string
+			[ 'input_attributes', '' ], // array
+			[ 'input_attributes', 7 ], // array
+			[ 'input_attributes', 'row="40"' ], // array
+			[ 'label',            false ], // string
+			[ 'more_help',        [] ], // string
+			[ 'no_wrap',          '0' ], // bool
+			[ 'numbered',         5 ], // bool
+			[ 'options',          'cat' ], // array
+			[ 'raw_help',         [ 'cat', 'emu' ] ], // string
+			[ 'required',         [] ], // bool
+		];
+	}
+
 
 
 	//
@@ -240,18 +273,33 @@ class c2c_Plugin extends WP_UnitTestCase {
 	 * add_option()
 	 */
 
+	public function test_valid_option_attribute() {
+		$this->obj->add_option( 'testoption', self::$example_option );
+		$this->assertTrue( true );
+	}
+
 	/**
-	 * @expectedIncorrectUsage input_attributes
+	 * @expectedIncorrectUsage c2c_Plugin::verify_options
+	 * @dataProvider invalid_config_attributes
 	 */
-	 public function test_display_option__invalid_input_attributes() {
-		$this->obj->add_option( 'shorttextfield', [
-			'input'    => 'short_text',
-			'default'  => 25,
-			'datatype' => 'int',
-			'required' => true,
-			'label'    => 'Short text field',
-			'input_attributes' => '',
-		] );
+	public function test_invalid_option_attribute( $key, $val ) {
+		$this->obj->add_option( 'testoption', array_merge( self::$example_option, [ $key => $val ] ) );
+	}
+
+	public function test_config_attribute_default_can_be_any_datatype() {
+		$this->obj->add_option( 'testoption', array_merge( self::$example_option, [ 'default' => false ] ) );
+		$this->obj->add_option( 'testoption', array_merge( self::$example_option, [ 'default' => true ] ) );
+		$this->obj->add_option( 'testoption', array_merge( self::$example_option, [ 'default' => 0 ] ) );
+		$this->obj->add_option( 'testoption', array_merge( self::$example_option, [ 'default' => 1 ] ) );
+		$this->obj->add_option( 'testoption', array_merge( self::$example_option, [ 'default' => 9 ] ) );
+		$this->obj->add_option( 'testoption', array_merge( self::$example_option, [ 'default' => 9.5 ] ) );
+		$this->obj->add_option( 'testoption', array_merge( self::$example_option, [ 'default' => '' ] ) );
+		$this->obj->add_option( 'testoption', array_merge( self::$example_option, [ 'default' => 'cat' ] ) );
+		$this->obj->add_option( 'testoption', array_merge( self::$example_option, [ 'default' => [] ] ) );
+		$this->obj->add_option( 'testoption', array_merge( self::$example_option, [ 'default' => [ 'cat', 'dog' ] ] ) );
+		$this->obj->add_option( 'testoption', array_merge( self::$example_option, [ 'default' => [ 'doctor' => 11, 'quirk' => [ 'bowtie', 'fex' ] ] ] ) );
+		// Implicitly asserting that none of the above triggered a warning/error.
+		$this->assertTrue( true );
 	}
 
 	/*

@@ -6,6 +6,7 @@
   * 067:
     * Breaking: Require config attribute 'input_attributes' to be an array
     * Hardening: Treat input attributes as array and escape each element before output
+    * Change: Ensure config attribute values are of the same datatype as their defaults
     * Change: Simplify `form_action_url()` to avoid using a server global
     * Change: Use `form_action_url()` in `plugin_action_links()` rather than duplicating its functionality
     * Change: Escape output of all translated strings

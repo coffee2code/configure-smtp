@@ -116,7 +116,7 @@ abstract class c2c_Plugin_067 {
 		'more_help'        => '',
 		'no_wrap'          => false,
 		'numbered'         => false,
-		'options'          => '',
+		'options'          => [],
 		'output'           => '', // likely deprecated
 		'raw_help'         => '',
 		'required'         => false
@@ -663,10 +663,38 @@ abstract class c2c_Plugin_067 {
 
 		foreach ( $options as $opt ) {
 			foreach ( $this->config_attributes as $attrib => $default) {
+				// Use the default if not configured.
 				if ( ! isset( $this->config[ $opt ][ $attrib ] ) ) {
 					$this->config[ $opt ][ $attrib ] = $default;
 				}
+				// Ensure configured value is of same datatype as default.
+				else {
+					// Config attributes that can be any datatype (or at least can differ from the default).
+					$can_be_any_datatype = [ 'default' ];
+
+					$configured_value = $this->config[ $opt ][ $attrib ];
+					$datatype = '';
+					if ( in_array( $attrib, $can_be_any_datatype ) ) {
+						// Do nothing.
+					} elseif ( is_array( $default ) && ! is_array( $configured_value ) ) {
+						$datatype = 'an array';
+					} elseif ( is_bool( $default ) && ! is_bool( $configured_value ) ) {
+						$datatype = 'a boolean';
+					} elseif ( is_int( $default ) && ! is_int( $configured_value ) ) {
+						$datatype = 'an integer';
+					} elseif ( is_float( $default ) && ! is_float( $configured_value ) ) {
+						$datatype = 'a float';
+					} elseif ( is_string( $default ) && ! is_string( $configured_value ) ) {
+						$datatype = 'a string';
+					}
+
+					if ( $datatype ) {
+						_doing_it_wrong( 'c2c_Plugin::verify_options', esc_html( "The c2c_Plugin configuration {$opt} attribute {$attrib} should be {$datatype} and thus the default is being used instead." ), '067' );
+						$this->config[ $opt ][ $attrib ] = $default;
+					}
+				}
 			}
+
 			if ( 'array' === $this->config[ $opt ]['datatype'] && ! is_array( $this->config[ $opt ]['default'] ) ) {
 				$this->config[ $opt ]['default'] = $this->config[ $opt ]['default'] ?
 					array( $this->config[ $opt ]['default'] ) :
