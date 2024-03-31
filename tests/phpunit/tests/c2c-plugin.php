@@ -313,4 +313,27 @@ class c2c_Plugin extends WP_UnitTestCase {
 		$this->assertEquals( 'title="HTML tags are a no go."', $this->obj->esc_attributes( [ 'title' => 'HTML tags are a <strong>no go</strong>.' ] ) );
 	}
 
+	/*
+	 * display_option()
+	 */
+
+	public function test_display_option_short_text_field() {
+		$this->obj->add_option( 'shorttextfield', [
+			'input'    => 'short_text',
+			'default'  => 25,
+			'datatype' => 'int',
+			'required' => true,
+			'label'    => 'Short text field',
+			'help'     => 'This is help.',
+			'input_attributes' => [],
+		] );
+
+		$expected = '<input type="text" class="c2c-short_text small-text" id="shorttextfield" name="c2c_configure_smtp[shorttextfield]" value="25" />'
+			. "\n"
+			. '<p class="description">This is help.</p>'
+			. "\n";
+
+		$this->expectOutputRegex( '~^' . preg_quote( $expected ) . '$~', $this->obj->display_option( 'shorttextfield' ) );
+	}
+
 }
