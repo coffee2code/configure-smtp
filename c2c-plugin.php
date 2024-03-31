@@ -629,7 +629,7 @@ abstract class c2c_Plugin_067 {
 	}
 
 	/**
-	 * Verifies that the necessary configuration files were set in the inheriting class.
+	 * Verifies that the necessary configuration options were set in the inheriting class.
 	 */
 	public function verify_config() {
 		// Ensure required configuration options have been configured via the sub-class. Die if any aren't.
@@ -970,7 +970,7 @@ abstract class c2c_Plugin_067 {
 	 *
 	 * @since 037
 	 *
-	 * @param array $settings   The new setting value(s).
+	 * @param array $settings   The new settings values.
 	 * @param bool  $with_reset Should the options be reset, with the new settings overlaid on top of the default settings?
 	 * @return array
 	 */
